@@ -30,12 +30,8 @@ public class Driver {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Driver [fiscalCode=");
-		builder.append(fiscalCode);
-		builder.append(", cars=");
-		builder.append(cars);
-		builder.append("]");
-		return builder.toString();
+		return "Driver{" +
+				"fiscalCode='" + fiscalCode + '\'' +
+				'}';
 	}
 }

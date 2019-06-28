@@ -26,10 +26,8 @@ public class Car {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Car [licensePlate=");
-		builder.append(licensePlate);
-		builder.append("]");
-		return builder.toString();
+		return "Car{" +
+				"licensePlate='" + licensePlate + '\'' +
+				'}';
 	}
 }
