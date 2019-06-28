@@ -1,9 +1,0 @@
-- auto
-	Automobile -> Car
-	Automobilista -> Driver
-
-- park
-    Parcheggio -> Parking
-    Posto auto -> ParkingSlot
-    GestorePrenotazione -> BookingManager
-    Ticket
