@@ -1,4 +1,4 @@
-package com.company;
+package park;
 
 public class Main {
 
