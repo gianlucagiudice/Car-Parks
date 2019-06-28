@@ -1,0 +1,6 @@
+Automobile -> Car
+Automobilista -> Driver
+GestorePrenotazione -> BookingManager
+- park
+    Parcheggio -> Parking
+    Posto auto -> Parking Slot
