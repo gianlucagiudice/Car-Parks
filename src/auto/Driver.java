@@ -1,38 +1,32 @@
 package auto;
 
-import java.util.List;
-import java.util.Objects;
+import park.Park;
+import park.ParkFullException;
 
-public class Driver {
+public class Driver extends Thread{
+	private Car car;
 
-	private String fiscalCode;
-	private List<Car> cars;
-
-	public Driver(String fiscalCode, List<Car> cars) {
-		this.fiscalCode = fiscalCode;
-		this.cars = cars;
+	public void run(Park park) throws InterruptedException {
+		while (park.getFreeValets() <= 0)
+			wait();
+		try {
+			park.park(car);
+		} catch (ParkFullException e) {
+			e.printStackTrace();
+		}
+	}
+	public Driver(Car car) {
+		this.car = car;
 	}
 
-	public String getFiscalCode() {
-		return fiscalCode;
+	public Car getCar() {
+		return car;
 	}
 
-	public List<Car> getCars() {
-		return cars;
+	public void setCar(Car car) {
+		this.car = car;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Driver driver = (Driver) o;
-		return fiscalCode.equals(driver.fiscalCode) &&
-				Objects.equals(cars, driver.cars);
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(fiscalCode, cars);
-	}
 }
 
