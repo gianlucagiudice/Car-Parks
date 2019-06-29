@@ -2,98 +2,63 @@ package park;
 
 import auto.*;
 
+import java.util.Objects;
+
 public class Ticket {
 
-	private Parking parking;
-	private ParkingSlot parkingSlot;
-	private int timeSlot;
+	private int id;
+	private Park park;
+	private ParkSlot parkingSlot;
+	private int startSlot;
 	private int duration;
 	private Driver driver;
 	private Car car;
-	
-	public Ticket(Parking parking, ParkingSlot parkingSlot, int timeSlot, int duration, Driver driver, Car car) {
-		this.parking = parking;
+
+
+	public Ticket(Park park, ParkSlot parkingSlot, int startSlot, int duration, Driver driver, Car car) {
+		this.park = park;
 		this.parkingSlot = parkingSlot;
-		this.timeSlot = timeSlot;
+		this.startSlot = startSlot;
 		this.duration = duration;
 		this.driver = driver;
 		this.car = car;
+		this.id = this.hashCode();
 	}
 
-	public Parking getParking() {
-		return parking;
-	}
-
-	public void setParking(Parking parking) {
-		this.parking = parking;
-	}
-
-	public ParkingSlot getParkingSlot() {
+	public ParkSlot getParkingSlot() {
 		return parkingSlot;
 	}
 
-	public void setParkingSlot(ParkingSlot parkingSlot) {
-		this.parkingSlot = parkingSlot;
-	}
-
-	public int getTimeSlot() {
-		return timeSlot;
-	}
-
-	public void setTimeSlot(int timeSlot) {
-		this.timeSlot = timeSlot;
+	public int getStartSlot() {
+		return startSlot;
 	}
 
 	public int getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
-		this.duration = duration;
-	}
-
 	public Driver getDriver() {
 		return driver;
 	}
 
-	public void setDriver(Driver driver) {
-		this.driver = driver;
-	}
-
-	public Car getCar() {
-		return car;
-	}
-
-	public void setCar(Car car) {
-		this.car = car;
+	public int endSlot(){
+		return startSlot + duration;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
-		result = prime * result + ((parking == null) ? 0 : parking.hashCode());
-		result = prime * result + timeSlot;
-		return result;
+		return Objects.hash(park, parkingSlot, startSlot, duration, driver, car);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Ticket [parking=");
-		builder.append(parking);
-		builder.append(", parkingSlot=");
-		builder.append(parkingSlot);
-		builder.append(", timeSlot=");
-		builder.append(timeSlot);
-		builder.append(", duration=");
-		builder.append(duration);
-		builder.append(", driver=");
-		builder.append(driver);
-		builder.append(", car=");
-		builder.append(car);
-		builder.append("]");
-		return builder.toString();
+		return "Ticket{" +
+				"id=" + id +
+				", parkingSlot=" + parkingSlot +
+				", startSlot=" + startSlot +
+				", duration=" + duration +
+				", driver=" + driver +
+				", car=" + car +
+				'}';
 	}
 }
