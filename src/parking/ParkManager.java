@@ -1,7 +1,6 @@
 package parking;
 
 import auto.Car;
-import parking.ticketing.Ticket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +15,14 @@ class ParkManager {
         this.parkID = parkID;
     }
 
-    synchronized ParkingSpot acquireParkingSpot(ParkingSpot[] parkingSpots) throws ParkFullException {
+    synchronized ParkingSpot acquireParkingSpot(ParkingSpot[] parkingSpots) throws ParkingFullException {
         for (ParkingSpot parkingSpot : parkingSpots) {
             if (parkingSpot.isFree()) {
                 parkingSpot.occupy();
                 return parkingSpot;
             }
         }
-        throw new ParkFullException("Parking is full");
+        throw new ParkingFullException("Parking is full");
     }
 
     int factoryTicket(ParkingSpot targetSlot, Car car) {

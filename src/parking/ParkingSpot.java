@@ -3,27 +3,28 @@ package parking;
 import auto.Car;
 
 public class ParkingSpot {
-    private boolean free;
+    private boolean isFree;
     private Car car;
 
+
     ParkingSpot() {
-        this.free = true;
+        this.isFree = true;
         this.car = null;
     }
 
     boolean isFree() {
-        return free;
+        return isFree;
     }
 
     public Car release() {
-        this.free = true;
+        this.isFree = true;
         Car parked = this.car;
         car = null;
         return parked;
     }
 
     void occupy() {
-        this.free = false;
+        this.isFree = false;
     }
 
 }

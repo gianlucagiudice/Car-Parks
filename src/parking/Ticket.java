@@ -1,7 +1,6 @@
-package parking.ticketing;
+package parking;
 
 import auto.Car;
-import parking.ParkingSpot;
 
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ public class Ticket {
 	private Car carParked;
 
 
-	public Ticket(int parkID, ParkingSpot carParkedSprot, Car carParked) {
+	Ticket(int parkID, ParkingSpot carParkedSpot, Car carParked) {
 		this.parkID = parkID;
 		this.carParkedSpot = carParkedSpot;
 		this.carParked = carParked;

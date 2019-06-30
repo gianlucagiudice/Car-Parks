@@ -35,7 +35,7 @@ public class Parking {
         ticket = parkingManager.factoryTicket(targetSpot, car);
         // TODO: Parking a car
         occupyValet();
-        //deliveries.
+        //deliveries
         releaseValet();
         notifyAll();
         return ticket;

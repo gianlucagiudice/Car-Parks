@@ -1,7 +1,6 @@
 package parking;
 
 import auto.Car;
-import parking.ticketing.Ticket;
 
 import java.util.HashMap;
 import java.util.Map;
