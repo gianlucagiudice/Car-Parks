@@ -2,60 +2,51 @@ package park;
 
 import auto.Car;
 import main.Main;
-import park.ticketing.Ticket;
 
 import java.util.*;
 
 public class Park {
     private String id;
-    private ParkingSlot[] parkingSlots;
+    private ParkSlot[] parkSlots;
 
     private List<Valet> valets;
     private int freeValets;
 
-    private Map<Integer, Ticket> ticketMap = new HashMap<>();
+    private ParkManager parkManager;
+
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
 
-    public Park(String id, int parkingSlotsNumber, int valetsNumber) {
+    public Park(String id, int parkSlotsNumber, int valetsNumber) {
         this.id = id;
-        this.parkingSlots = factorySlots(parkingSlotsNumber);
+        this.parkSlots = factorySlots(parkSlotsNumber);
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
+        // ParkManager must contains the id of the park
+        this.parkManager = new ParkManager(this.hashCode());
     }
 
-    private void startValets() {
-        for (Valet v : this.valets)
-            v.start();
+    public int delivery(Car car) throws ParkFullException {
+        ParkSlot targetSlot;
+        int ticket;
+        // Acquire a free parking slot
+        targetSlot = parkManager.acquireParkingSlot(this.parkSlots);
+        // Factory ticket
+        ticket = parkManager.factoryTicket(targetSlot, car);
+        // TODO: Park a car
+        occupyValet();
+
+        releaseValet();
+        notifyAll();
+        return ticket;
     }
 
-    // Park a car
-    public int park(Car car) throws ParkFullException {
-        ParkingSlot targetSlot = null;
-        // Find a free ParkingSlot
-        for (ParkingSlot ParkingSlot : parkingSlots) {
-            synchronized (this) {
-                if (ParkingSlot.isFree()) {
-                    ParkingSlot.setCar(car);
-                    targetSlot = ParkingSlot;
-                }
-            }
-            if (targetSlot != null)
-                break;
-        }
-        if (targetSlot == null)
-            throw new ParkFullException("Park is full");
-        // Generate the ticket
-        return factoryTicket(targetSlot, car);
+    public Car pickup(int ticket) {
+        //TODO: Implement pickup car
+        return null;
     }
 
-    private int factoryTicket(ParkingSlot targetSlot, Car car) {
-        // Generate the ticket
-        Ticket generatedTicket = new Ticket(this, targetSlot, car);
-        this.ticketMap.put(generatedTicket.hashCode(), generatedTicket);
-        return generatedTicket.hashCode();
-    }
 
     private List<Valet> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
@@ -65,20 +56,33 @@ public class Park {
         return valets;
     }
 
-    private ParkingSlot[] factorySlots(int parkingSlotsNumber) {
-        parkingSlots = new ParkingSlot[parkingSlotsNumber];
-        for (int i = 0; i < parkingSlots.length; i++) {
-            parkingSlots[i] = new ParkingSlot(Main.totalTimeSlices);
-        }
-        return parkingSlots;
+    private void startValets() {
+        for (Valet v : this.valets)
+            v.start();
     }
 
-    public synchronized int getFreeValets() {
-        return freeValets;
+    private synchronized void occupyValet(){
+        this.freeValets--;
+    }
+
+    private synchronized void releaseValet(){
+        this.freeValets++;
+    }
+
+    private ParkSlot[] factorySlots(int parkSlotsNumber) {
+        parkSlots = new ParkSlot[parkSlotsNumber];
+        for (int i = 0; i < parkSlots.length; i++) {
+            parkSlots[i] = new ParkSlot(Main.totalTimeSlices);
+        }
+        return parkSlots;
     }
 
     public String getId() {
         return id;
+    }
+
+    public synchronized int getFreeValets() {
+        return freeValets;
     }
 
     @Override

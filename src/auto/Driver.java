@@ -3,21 +3,37 @@ package auto;
 import park.Park;
 import park.ParkFullException;
 
-public class Driver extends Thread{
+public class Driver implements Runnable{
+	private Park park;
 	private Car car;
+	private int ticket;
 
-	public void run(Park park) throws InterruptedException {
-		while (park.getFreeValets() <= 0)
-			wait();
+	public Driver(Park park, Car car) {
+		this.car = car;
+		this.park = park;
+	}
+
+	@Override
+	public void run() {
+		waitForValets();
+		// Park the car
 		try {
-			park.park(car);
+			ticket = park.delivery(car);
 		} catch (ParkFullException e) {
+			// Park is full;
 			e.printStackTrace();
 		}
+		car = park.pickup(ticket);
 	}
-	
-	public Driver(Car car) {
-		this.car = car;
+
+	private void waitForValets(){
+		while (park.getFreeValets() <= 0){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Car getCar() {
@@ -27,4 +43,5 @@ public class Driver extends Thread{
 	public void setCar(Car car) {
 		this.car = car;
 	}
+
 }
