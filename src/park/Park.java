@@ -2,7 +2,6 @@ package park;
 
 import auto.Car;
 import main.Main;
-import park.ticketing.Ticket;
 
 import java.util.*;
 
@@ -13,7 +12,8 @@ public class Park {
     private List<Valet> valets;
     private int freeValets;
 
-    private Map<Integer, Ticket> ticketMap = new HashMap<>();
+    private ParkManager parkManager;
+
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
 
@@ -23,39 +23,31 @@ public class Park {
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
-    }
-
-    private void startValets() {
-        for (Valet v : this.valets)
-            v.start();
+        // ParkManager must contains the id of the park
+        this.parkManager = new ParkManager(this.hashCode());
     }
 
     // Park a car
-    public int park(Car car) throws ParkFullException {
-        ParkSlot targetSlot = null;
-        // Find a free parkSlot
-        for (ParkSlot parkSlot : parkSlots) {
-            synchronized (this) {
-                if (parkSlot.isFree()) {
-                    parkSlot.setCar(car);
-                    targetSlot = parkSlot;
-                }
-            }
-            if (targetSlot != null)
-                break;
-        }
-        if (targetSlot == null)
-            throw new ParkFullException("Park is full");
-        // Generate the ticket
-        return factoryTicket(targetSlot, car);
+
+    public int delivery(Car car) throws ParkFullException {
+        ParkSlot targetSlot;
+        int ticket;
+        // Acquire a free parking slot
+        targetSlot = parkManager.acquireParkingSlot(this.parkSlots);
+        // Factory ticket
+        ticket = parkManager.factoryTicket(targetSlot, car);
+        // Park car
+        occupyValet();
+
+        releaseValet();
+        notifyAll();
+        return ticket;
+    }
+    public Car pickup(int ticket) {
+        //TODO: Implement pickup car
+        return null;
     }
 
-    private int factoryTicket(ParkSlot targetSlot, Car car) {
-        // Generate the ticket
-        Ticket generatedTicket = new Ticket(this, targetSlot, car);
-        this.ticketMap.put(generatedTicket.hashCode(), generatedTicket);
-        return generatedTicket.hashCode();
-    }
 
     private List<Valet> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
@@ -63,6 +55,19 @@ public class Park {
             this.valets.add(new Valet());
         }
         return valets;
+    }
+
+    private void startValets() {
+        for (Valet v : this.valets)
+            v.start();
+    }
+
+    private synchronized void occupyValet(){
+        this.freeValets--;
+    }
+
+    private synchronized void releaseValet(){
+        this.freeValets++;
     }
 
     private ParkSlot[] factorySlots(int parkSlotsNumber) {
@@ -73,12 +78,12 @@ public class Park {
         return parkSlots;
     }
 
-    public synchronized int getFreeValets() {
-        return freeValets;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public synchronized int getFreeValets() {
+        return freeValets;
     }
 
     @Override

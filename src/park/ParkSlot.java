@@ -5,49 +5,54 @@ import main.Main;
 
 public class ParkSlot {
     private boolean[] booking;
+    private boolean free;
     private Car car;
 
-    ParkSlot(int timeSlicesNumber){
+    ParkSlot(int timeSlicesNumber) {
         this.booking = new boolean[timeSlicesNumber];
         this.car = null;
-        freeSlots();
+        this.free = true;
     }
 
-    private boolean isBooked(int timeSlice){
+    private boolean isBooked(int timeSlice) {
         return booking[timeSlice];
     }
 
-    public boolean isBookable(int timeSlice, int numberSlices){
+    public boolean isBookable(int timeSlice, int numberSlices) {
         for (int i = timeSlice; i < timeSlice + numberSlices; i++)
             if (isBooked(i))
                 return false;
         return true;
     }
 
-
-    boolean isFree(){
-        return car == null && !booking[Main.currentTimeSlice];
+    boolean isFree() {
+        return free && !booking[Main.currentTimeSlice];
     }
 
-    public Car getCar() {
-        return car;
+    public Car release() {
+        this.free = true;
+        Car parked = this.car;
+        car = null;
+        return parked;
     }
 
-    void setCar(Car car) {
-        this.car = car;
+    void occupy(){
+        this.free = false;
     }
 
-    private void freeSlots(){
+    /*
+    private void freeSlices() {
         setBooking(0, booking.length, false);
     }
 
-    private void setBooking(int timeSlice, int numberSlices, boolean bookOrFree){
+    private void setBooking(int timeSliceboolean bookOrFree) {
         for (int i = timeSlice; i < timeSlice + numberSlices; i++)
             setBooking(i, bookOrFree);
     }
 
-    private void setBooking(int timeSlice, boolean bookOrFree){
+    private void setBooking(int timeSlice, boolean bookOrFree) {
         booking[timeSlice] = bookOrFree;
     }
+     */
 
 }
