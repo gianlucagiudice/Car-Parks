@@ -12,7 +12,7 @@ public class Parking {
     private List<Valet> valets;
     private int freeValets;
 
-    private ParkManager parkManager;
+    private ParkingManager parkingManager;
 
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
@@ -23,20 +23,20 @@ public class Parking {
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
-        // ParkManager must contains the id of the parking
-        this.parkManager = new ParkManager(this.hashCode());
+        // ParkingManager must contains the id of the parking
+        this.parkingManager = new ParkingManager(this.hashCode());
     }
 
-    public int delivery(Car car) throws ParkFullException {
+    public int delivery(Car car) throws ParkingFullException {
         ParkingSpot targetSpot;
         int ticket;
         // Acquire a free parking spot
-        targetSpot = parkManager.acquireParkingSpot(this.parkingSpots);
+        targetSpot = parkingManager.acquireParkingSpot(this.parkingSpots);
         // Factory ticket
-        ticket = parkManager.factoryTicket(targetSpot, car);
+        ticket = parkingManager.factoryTicket(targetSpot, car);
         // TODO: Parking a car
         occupyValet();
-
+        //deliveries.
         releaseValet();
         notifyAll();
         return ticket;

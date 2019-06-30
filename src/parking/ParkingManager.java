@@ -6,24 +6,24 @@ import parking.ticketing.Ticket;
 import java.util.HashMap;
 import java.util.Map;
 
-class ParkManager {
+class ParkingManager {
 
     private int parkID;
     private Map<Integer, Ticket> ticketMap = new HashMap<>();
 
-    ParkManager(int parkID) {
-        // ParkManager must contains the id of the parking
+    ParkingManager(int parkID) {
+        // ParkingManager must contains the id of the parking
         this.parkID = parkID;
     }
 
-    synchronized ParkingSpot acquireParkingSpot(ParkingSpot[] parkingSpots) throws ParkFullException {
+    synchronized ParkingSpot acquireParkingSpot(ParkingSpot[] parkingSpots) throws ParkingFullException {
         for (ParkingSpot parkingSpot : parkingSpots) {
             if (parkingSpot.isFree()) {
                 parkingSpot.occupy();
                 return parkingSpot;
             }
         }
-        throw new ParkFullException("Parking is full");
+        throw new ParkingFullException("Parking is full");
     }
 
     int factoryTicket(ParkingSpot targetSlot, Car car) {

@@ -1,7 +1,7 @@
 package auto;
 
 import parking.Parking;
-import parking.ParkFullException;
+import parking.ParkingFullException;
 
 public class Driver implements Runnable{
 	private Parking parking;
@@ -19,7 +19,7 @@ public class Driver implements Runnable{
 		// Parking the car
 		try {
 			ticket = parking.delivery(car);
-		} catch (ParkFullException e) {
+		} catch (ParkingFullException e) {
 			// Parking is full;
 			e.printStackTrace();
 		}
