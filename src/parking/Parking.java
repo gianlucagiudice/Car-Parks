@@ -9,7 +9,7 @@ public class Parking {
     private String id;
     private ParkingSpot[] parkingSpots;
 
-    private List<Valet> valets;
+    private List<Thread> valets;
     private int freeValets;
 
 <<<<<<< HEAD
@@ -76,17 +76,18 @@ public class Parking {
     }
 
 
-    private List<Valet> factoryValets(int valetsNumber) {
+    private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
-            this.valets.add(new Valet());
+            this.valets.add(new Thread(new Valet()));
         }
         return valets;
     }
 
     private void startValets() {
-        for (Valet v : this.valets)
-            v.start();
+        for (Thread valet : valets) {
+            valet.start();
+        }
     }
 
     private synchronized void occupyValet(){

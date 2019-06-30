@@ -12,9 +12,8 @@ public class Driver implements Runnable{
 	private Car car;
 	private int ticket;
 
-	public Driver(Parking parking, Car car) {
+	public Driver(Car car) {
 		this.car = car;
-		this.parking = parking;
 	}
 
 	@Override
@@ -48,8 +47,7 @@ public class Driver implements Runnable{
 		return car;
 	}
 
-	public void setCar(Car car) {
-		this.car = car;
+	public void setParking(Parking parking) {
+		this.parking = parking;
 	}
-
 }

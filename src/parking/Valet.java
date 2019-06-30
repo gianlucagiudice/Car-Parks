@@ -1,7 +1,9 @@
 package parking;
 
-public class Valet extends Thread {
-    public void run(){
+public class Valet implements Runnable {
+
+    @Override
+    public void run() {
 
     }
 }
