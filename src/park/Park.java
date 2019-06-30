@@ -27,8 +27,6 @@ public class Park {
         this.parkManager = new ParkManager(this.hashCode());
     }
 
-    // Park a car
-
     public int delivery(Car car) throws ParkFullException {
         ParkSlot targetSlot;
         int ticket;
@@ -36,13 +34,14 @@ public class Park {
         targetSlot = parkManager.acquireParkingSlot(this.parkSlots);
         // Factory ticket
         ticket = parkManager.factoryTicket(targetSlot, car);
-        // Park car
+        // TODO: Park a car
         occupyValet();
 
         releaseValet();
         notifyAll();
         return ticket;
     }
+
     public Car pickup(int ticket) {
         //TODO: Implement pickup car
         return null;
