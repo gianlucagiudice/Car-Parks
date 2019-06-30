@@ -45,7 +45,7 @@ public class ParkSlot {
         setBooking(0, booking.length, false);
     }
 
-    private void setBooking(int timeSliceboolean bookOrFree) {
+    private void setBooking(int timeSlice, boolean bookOrFree) {
         for (int i = timeSlice; i < timeSlice + numberSlices; i++)
             setBooking(i, bookOrFree);
     }
