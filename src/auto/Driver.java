@@ -4,11 +4,12 @@ import parking.Parking;
 import parking.ParkingFullException;
 
 public class Driver implements Runnable{
-	private Parking parking;
+	private Parking targetParking;
 	private Car car;
 	private int ticket;
 
-	public Driver(Car car) {
+	public Driver(Parking targetParking, Car car) {
+		this.targetParking = targetParking;
 		this.car = car;
 	}
 
@@ -17,16 +18,16 @@ public class Driver implements Runnable{
 		waitForValets();
 		// Parking the car
 		try {
-			ticket = parking.delivery(car);
+			ticket = delivery();
 		} catch (ParkingFullException e) {
 			// Parking is full;
 			e.printStackTrace();
 		}
-		car = parking.pickup(ticket);
+		car = pickup();
 	}
 
 	private void waitForValets(){
-		while (parking.getFreeValets() <= 0){
+		while (targetParking.getFreeValets() <= 0){
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -35,12 +36,20 @@ public class Driver implements Runnable{
 		}
 	}
 
+	private int delivery() throws ParkingFullException {
+		return this.targetParking.delivery(car);
+	}
+
+	private Car pickup(){
+		return targetParking.pickup(ticket);
+	}
+
 	public Car getCar() {
 		return car;
 	}
 
 	public void setParking(Parking parking) {
-		this.parking = parking;
+		this.targetParking = parking;
 	}
 }
 

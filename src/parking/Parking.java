@@ -1,7 +1,6 @@
 package parking;
 
 import auto.Car;
-import main.Main;
 
 import java.util.*;
 
@@ -73,7 +72,7 @@ public class Parking {
     private ParkingSpot[] factorySpots(int parkingSpotsNumber) {
         parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot(Main.totalTimeSlices);
+            parkingSpots[i] = new ParkingSpot();
         }
         return parkingSpots;
     }
