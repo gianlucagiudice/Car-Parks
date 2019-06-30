@@ -17,13 +17,13 @@ public class Parking {
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
 
-    public Parking(String id, int parkSpotsNumber, int valetsNumber) {
+    public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
         this.id = id;
-        this.parkingSpots = factorySpots(parkSpotsNumber);
+        this.parkingSpots = factorySpots(parkingSpotsNumber);
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
-        // ParkingManager must contains the id of the parking
+        // ParkingManager must contain the id of the parking
         this.parkingManager = new ParkingManager(this.hashCode());
     }
 
@@ -70,8 +70,8 @@ public class Parking {
         this.freeValets++;
     }
 
-    private ParkingSpot[] factorySpots(int parkSpotsNumber) {
-        parkingSpots = new ParkingSpot[parkSpotsNumber];
+    private ParkingSpot[] factorySpots(int parkingSpotsNumber) {
+        parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
             parkingSpots[i] = new ParkingSpot(Main.totalTimeSlices);
         }

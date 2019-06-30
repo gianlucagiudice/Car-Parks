@@ -12,7 +12,7 @@ public class Ticket {
 	private Car carParked;
 
 
-	public Ticket(int parkID, ParkingSpot carParkedSpot, Car carParked) {
+	public Ticket(int parkID, ParkingSpot carParkedSprot, Car carParked) {
 		this.parkID = parkID;
 		this.carParkedSpot = carParkedSpot;
 		this.carParked = carParked;
