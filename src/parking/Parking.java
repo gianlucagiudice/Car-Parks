@@ -12,6 +12,7 @@ public class Parking {
     private List<Valet> valets;
     private int freeValets;
 
+<<<<<<< HEAD
     private ParkManager parkManager;
 
     private Queue<Integer> deliveries;
@@ -37,6 +38,33 @@ public class Parking {
         // TODO: Parking a car
         occupyValet();
 
+=======
+    private ParkingManager parkingManager;
+
+    private Queue<Integer> deliveries;
+    private Queue<Integer> pickups;
+
+    public Parking(String id, int parkSpotsNumber, int valetsNumber) {
+        this.id = id;
+        this.parkingSpots = factorySpots(parkSpotsNumber);
+        this.valets = factoryValets(valetsNumber);
+        startValets();
+        this.freeValets = valetsNumber;
+        // ParkingManager must contains the id of the parking
+        this.parkingManager = new ParkingManager(this.hashCode());
+    }
+
+    public int delivery(Car car) throws ParkingFullException {
+        ParkingSpot targetSpot;
+        int ticket;
+        // Acquire a free parking spot
+        targetSpot = parkingManager.acquireParkingSpot(this.parkingSpots);
+        // Factory ticket
+        ticket = parkingManager.factoryTicket(targetSpot, car);
+        // TODO: Parking a car
+        occupyValet();
+        //deliveries.
+>>>>>>> branch 'master' of https://github.com/gianlucagiudice/Car-Parks.git
         releaseValet();
         notifyAll();
         return ticket;

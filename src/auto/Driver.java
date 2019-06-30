@@ -1,7 +1,11 @@
 package auto;
 
 import parking.Parking;
+<<<<<<< HEAD
 import parking.ParkFullException;
+=======
+import parking.ParkingFullException;
+>>>>>>> branch 'master' of https://github.com/gianlucagiudice/Car-Parks.git
 
 public class Driver implements Runnable{
 	private Parking parking;
@@ -19,7 +23,11 @@ public class Driver implements Runnable{
 		// Parking the car
 		try {
 			ticket = parking.delivery(car);
+<<<<<<< HEAD
 		} catch (ParkFullException e) {
+=======
+		} catch (ParkingFullException e) {
+>>>>>>> branch 'master' of https://github.com/gianlucagiudice/Car-Parks.git
 			// Parking is full;
 			e.printStackTrace();
 		}
