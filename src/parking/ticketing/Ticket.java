@@ -1,18 +1,18 @@
-package park.ticketing;
+package parking.ticketing;
 
 import auto.Car;
-import park.ParkSlot;
+import parking.ParkingSpot;
 
 import java.util.Objects;
 
 public class Ticket {
 
 	private int parkID;
-	private ParkSlot carParkedSlot;
+	private ParkingSpot carParkedSlot;
 	private Car carParked;
 
 
-	public Ticket(int parkID, ParkSlot carParkedSlot, Car carParked) {
+	public Ticket(int parkID, ParkingSpot carParkedSlot, Car carParked) {
 		this.parkID = parkID;
 		this.carParkedSlot = carParkedSlot;
 		this.carParked = carParked;

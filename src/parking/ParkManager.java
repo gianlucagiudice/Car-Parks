@@ -1,7 +1,7 @@
-package park;
+package parking;
 
 import auto.Car;
-import park.ticketing.Ticket;
+import parking.ticketing.Ticket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,21 +12,21 @@ class ParkManager {
     private Map<Integer, Ticket> ticketMap = new HashMap<>();
 
     ParkManager(int parkID) {
-        // ParkManager must contains the id of the park
+        // ParkManager must contains the id of the parking
         this.parkID = parkID;
     }
 
-    synchronized ParkSlot acquireParkingSlot(ParkSlot[] parkSlots) throws ParkFullException {
-        for (ParkSlot parkSlot : parkSlots) {
-            if (parkSlot.isFree()) {
-                parkSlot.occupy();
-                return parkSlot;
+    synchronized ParkingSpot acquireParkingSpot(ParkingSpot[] parkingSpots) throws ParkFullException {
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            if (parkingSpot.isFree()) {
+                parkingSpot.occupy();
+                return parkingSpot;
             }
         }
-        throw new ParkFullException("Park is full");
+        throw new ParkFullException("Parking is full");
     }
 
-    int factoryTicket(ParkSlot targetSlot, Car car) {
+    int factoryTicket(ParkingSpot targetSlot, Car car) {
         // Generate the ticket
         Ticket generatedTicket = new Ticket(this.parkID, targetSlot, car);
         this.ticketMap.put(generatedTicket.hashCode(), generatedTicket);

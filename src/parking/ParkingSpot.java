@@ -1,14 +1,14 @@
-package park;
+package parking;
 
 import auto.Car;
 import main.Main;
 
-public class ParkSlot {
+public class ParkingSpot {
     private boolean[] booking;
     private boolean free;
     private Car car;
 
-    ParkSlot(int timeSlicesNumber) {
+    ParkingSpot(int timeSlicesNumber) {
         this.booking = new boolean[timeSlicesNumber];
         this.car = null;
         this.free = true;
