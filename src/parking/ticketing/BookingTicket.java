@@ -1,14 +1,14 @@
-package park.ticketing;
+package parking.ticketing;
 
 import auto.Car;
-import park.ParkSlot;
+import parking.ParkingSpot;
 
 import java.util.Objects;
 
 public class BookingTicket extends Ticket {
     private int startSlice;
 
-    public BookingTicket(int parkID, ParkSlot carParkedSlot, Car carParked, int startSlice) {
+    public BookingTicket(int parkID, ParkingSpot carParkedSlot, Car carParked, int startSlice) {
         super(parkID, carParkedSlot, carParked);
         this.startSlice = startSlice;
     }

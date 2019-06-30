@@ -1,13 +1,13 @@
-package park;
+package parking;
 
 import auto.Car;
 import main.Main;
 
 import java.util.*;
 
-public class Park {
+public class Parking {
     private String id;
-    private ParkSlot[] parkSlots;
+    private ParkingSpot[] parkingSpots;
 
     private List<Valet> valets;
     private int freeValets;
@@ -17,24 +17,24 @@ public class Park {
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
 
-    public Park(String id, int parkSlotsNumber, int valetsNumber) {
+    public Parking(String id, int parkSpotsNumber, int valetsNumber) {
         this.id = id;
-        this.parkSlots = factorySlots(parkSlotsNumber);
+        this.parkingSpots = factorySpots(parkSpotsNumber);
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
-        // ParkManager must contains the id of the park
+        // ParkManager must contains the id of the parking
         this.parkManager = new ParkManager(this.hashCode());
     }
 
     public int delivery(Car car) throws ParkFullException {
-        ParkSlot targetSlot;
+        ParkingSpot targetSpot;
         int ticket;
-        // Acquire a free parking slot
-        targetSlot = parkManager.acquireParkingSlot(this.parkSlots);
+        // Acquire a free parking spot
+        targetSpot = parkManager.acquireParkingSpot(this.parkingSpots);
         // Factory ticket
-        ticket = parkManager.factoryTicket(targetSlot, car);
-        // TODO: Park a car
+        ticket = parkManager.factoryTicket(targetSpot, car);
+        // TODO: Parking a car
         occupyValet();
 
         releaseValet();
@@ -69,12 +69,12 @@ public class Park {
         this.freeValets++;
     }
 
-    private ParkSlot[] factorySlots(int parkSlotsNumber) {
-        parkSlots = new ParkSlot[parkSlotsNumber];
-        for (int i = 0; i < parkSlots.length; i++) {
-            parkSlots[i] = new ParkSlot(Main.totalTimeSlices);
+    private ParkingSpot[] factorySpots(int parkSpotsNumber) {
+        parkingSpots = new ParkingSpot[parkSpotsNumber];
+        for (int i = 0; i < parkingSpots.length; i++) {
+            parkingSpots[i] = new ParkingSpot(Main.totalTimeSlices);
         }
-        return parkSlots;
+        return parkingSpots;
     }
 
     public String getId() {
@@ -92,7 +92,7 @@ public class Park {
 
     @Override
     public String toString() {
-        return "Park{" +
+        return "Parking{" +
                 "id='" + id + '\'' +
                 '}';
     }

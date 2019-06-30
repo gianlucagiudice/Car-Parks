@@ -1,33 +1,33 @@
 package auto;
 
-import park.Park;
-import park.ParkFullException;
+import parking.Parking;
+import parking.ParkFullException;
 
 public class Driver implements Runnable{
-	private Park park;
+	private Parking parking;
 	private Car car;
 	private int ticket;
 
-	public Driver(Park park, Car car) {
+	public Driver(Parking parking, Car car) {
 		this.car = car;
-		this.park = park;
+		this.parking = parking;
 	}
 
 	@Override
 	public void run() {
 		waitForValets();
-		// Park the car
+		// Parking the car
 		try {
-			ticket = park.delivery(car);
+			ticket = parking.delivery(car);
 		} catch (ParkFullException e) {
-			// Park is full;
+			// Parking is full;
 			e.printStackTrace();
 		}
-		car = park.pickup(ticket);
+		car = parking.pickup(ticket);
 	}
 
 	private void waitForValets(){
-		while (park.getFreeValets() <= 0){
+		while (parking.getFreeValets() <= 0){
 			try {
 				wait();
 			} catch (InterruptedException e) {
