@@ -28,4 +28,3 @@ public class Driver extends Thread{
 		this.car = car;
 	}
 }
-
