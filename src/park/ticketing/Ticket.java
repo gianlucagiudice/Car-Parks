@@ -2,24 +2,22 @@ package park.ticketing;
 
 import auto.*;
 import park.Park;
-import park.ParkSlot;
+import park.ParkingSlot;
 
 import java.util.Objects;
 
 public class Ticket {
-
 	private Park park;
-	private ParkSlot parkingSlot;
+	private ParkingSlot parkingSlot;
 	private Car car;
-
-
-	public Ticket(Park park, ParkSlot parkingSlot, Car car) {
+	
+	public Ticket(Park park, ParkingSlot parkingSlot, Car car) {
 		this.park = park;
 		this.parkingSlot = parkingSlot;
 		this.car = car;
 	}
 
-	public ParkSlot getParkingSlot() {
+	public ParkingSlot getParkingSlot() {
 		return parkingSlot;
 	}
 
@@ -31,5 +29,4 @@ public class Ticket {
 	public int hashCode() {
 		return Objects.hash(park, parkingSlot, car);
 	}
-
 }

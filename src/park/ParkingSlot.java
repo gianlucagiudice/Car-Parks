@@ -3,12 +3,12 @@ package park;
 import auto.Car;
 import main.Main;
 
-public class ParkSlot {
+public class ParkingSlot {
     private boolean[] booking;
     private Car car;
 
-    ParkSlot(int timeSlicesNumber){
-        this.booking = new boolean[timeSlicesNumber];
+    ParkingSlot(int totalTimeSlices){
+        this.booking = new boolean[totalTimeSlices];
         this.car = null;
         freeSlots();
     }
@@ -17,8 +17,8 @@ public class ParkSlot {
         return booking[timeSlice];
     }
 
-    public boolean isBookable(int timeSlice, int numberSlices){
-        for (int i = timeSlice; i < timeSlice + numberSlices; i++)
+    public boolean isBookable(int timeSlice, int totalTimeSlices){
+        for (int i = timeSlice; i < timeSlice + totalTimeSlices; i++)
             if (isBooked(i))
                 return false;
         return true;
@@ -49,5 +49,4 @@ public class ParkSlot {
     private void setBooking(int timeSlice, boolean bookOrFree){
         booking[timeSlice] = bookOrFree;
     }
-
 }

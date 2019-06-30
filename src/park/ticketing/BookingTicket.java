@@ -2,24 +2,24 @@ package park.ticketing;
 
 import auto.Car;
 import park.Park;
-import park.ParkSlot;
+import park.ParkingSlot;
 
 import java.util.Objects;
 
 public class BookingTicket extends Ticket {
-    private int startSlice;
+    private int startTimeSlice;
 
-    public BookingTicket(Park park, ParkSlot parkingSlot, Car car, int startSlice) {
+    public BookingTicket(Park park, ParkingSlot parkingSlot, Car car, int startTimeSlice) {
         super(park, parkingSlot, car);
-        this.startSlice = startSlice;
+        this.startTimeSlice = startTimeSlice;
     }
 
-    public int getStartSlice() {
-        return startSlice;
+    public int getStartTimeSlice() {
+        return startTimeSlice;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), startSlice);
+        return Objects.hash(super.hashCode(), startTimeSlice);
     }
 }

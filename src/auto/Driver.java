@@ -15,6 +15,7 @@ public class Driver extends Thread{
 			e.printStackTrace();
 		}
 	}
+	
 	public Driver(Car car) {
 		this.car = car;
 	}
@@ -26,7 +27,5 @@ public class Driver extends Thread{
 	public void setCar(Car car) {
 		this.car = car;
 	}
-
-
 }
 

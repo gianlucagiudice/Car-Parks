@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Park {
     private String id;
-    private ParkSlot[] parkSlots;
+    private ParkingSlot[] parkingSlots;
 
     private List<Valet> valets;
     private int freeValets;
@@ -17,9 +17,9 @@ public class Park {
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
 
-    public Park(String id, int parkSlotsNumber, int valetsNumber) {
+    public Park(String id, int parkingSlotsNumber, int valetsNumber) {
         this.id = id;
-        this.parkSlots = factorySlots(parkSlotsNumber);
+        this.parkingSlots = factorySlots(parkingSlotsNumber);
         this.valets = factoryValets(valetsNumber);
         startValets();
         this.freeValets = valetsNumber;
@@ -32,13 +32,13 @@ public class Park {
 
     // Park a car
     public int park(Car car) throws ParkFullException {
-        ParkSlot targetSlot = null;
-        // Find a free parkSlot
-        for (ParkSlot parkSlot : parkSlots) {
+        ParkingSlot targetSlot = null;
+        // Find a free ParkingSlot
+        for (ParkingSlot ParkingSlot : parkingSlots) {
             synchronized (this) {
-                if (parkSlot.isFree()) {
-                    parkSlot.setCar(car);
-                    targetSlot = parkSlot;
+                if (ParkingSlot.isFree()) {
+                    ParkingSlot.setCar(car);
+                    targetSlot = ParkingSlot;
                 }
             }
             if (targetSlot != null)
@@ -50,7 +50,7 @@ public class Park {
         return factoryTicket(targetSlot, car);
     }
 
-    private int factoryTicket(ParkSlot targetSlot, Car car) {
+    private int factoryTicket(ParkingSlot targetSlot, Car car) {
         // Generate the ticket
         Ticket generatedTicket = new Ticket(this, targetSlot, car);
         this.ticketMap.put(generatedTicket.hashCode(), generatedTicket);
@@ -65,12 +65,12 @@ public class Park {
         return valets;
     }
 
-    private ParkSlot[] factorySlots(int parkSlotsNumber) {
-        parkSlots = new ParkSlot[parkSlotsNumber];
-        for (int i = 0; i < parkSlots.length; i++) {
-            parkSlots[i] = new ParkSlot(Main.totalTimeSlices);
+    private ParkingSlot[] factorySlots(int parkingSlotsNumber) {
+        parkingSlots = new ParkingSlot[parkingSlotsNumber];
+        for (int i = 0; i < parkingSlots.length; i++) {
+            parkingSlots[i] = new ParkingSlot(Main.totalTimeSlices);
         }
-        return parkSlots;
+        return parkingSlots;
     }
 
     public synchronized int getFreeValets() {

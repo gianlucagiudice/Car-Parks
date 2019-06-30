@@ -1,7 +1,6 @@
 package auto;
 
 public class Car {
-
 	private String licensePlate;
 
 	public Car(String licensePlate) {
