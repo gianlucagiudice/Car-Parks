@@ -27,7 +27,7 @@ public class Driver implements Runnable {
         pickup();
     }
 
-    private void delivery(){
+    private void delivery() {
         try {
             this.ticketId = this.targetParking.delivery(this.car);
         } catch (FullParkingException | InterruptedException e) {

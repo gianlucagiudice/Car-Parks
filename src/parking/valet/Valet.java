@@ -3,11 +3,10 @@ package parking.valet;
 import parking.Parking;
 
 public class Valet implements Runnable {
-
     private Parking parking;
 
     public Valet(Parking parking) {
-        this.parking= parking;
+        this.parking = parking;
     }
 
     @Override
@@ -23,7 +22,7 @@ public class Valet implements Runnable {
         }
     }
 
-    private void accomplishTask(TaskStrategy taskToAccomplish){
+    private void accomplishTask(TaskStrategy taskToAccomplish) {
         try {
             taskToAccomplish.accomplish();
         } catch (InterruptedException e) {
@@ -31,7 +30,7 @@ public class Valet implements Runnable {
         }
     }
 
-    private void nothingToDo(){
+    private void nothingToDo() {
         try {
             wait();
         } catch (InterruptedException e) {

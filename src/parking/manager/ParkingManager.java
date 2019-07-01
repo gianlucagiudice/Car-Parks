@@ -40,7 +40,7 @@ public class ParkingManager {
     public synchronized Car pickup(Integer ticketId) throws CarNotFoundException {
         if (!parkingTicketManager.containsTicket(ticketId))
             throw new CarNotFoundException("Car not found in the parking");
-        if(pickups.containsKey(ticketId))
+        if (pickups.containsKey(ticketId))
             return pickups.get(ticketId);
         else
             return pickups.put(ticketId, null);
@@ -71,11 +71,10 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(ticketId);
     }
 
-    public synchronized void pickupCompleted(int ticketId){
+    public synchronized void pickupCompleted(int ticketId) {
         pickups.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }
-
 
 
 }

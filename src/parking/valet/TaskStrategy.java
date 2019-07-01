@@ -17,7 +17,7 @@ public abstract class TaskStrategy {
     }
 
     void sleepHalf() throws InterruptedException {
-        sleep(Main.valetSleep/2);
+        sleep(Main.valetSleep / 2);
     }
 
     private void sleep(int time) throws InterruptedException {

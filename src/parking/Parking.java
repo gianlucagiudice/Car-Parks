@@ -3,17 +3,17 @@ package parking;
 import auto.Car;
 import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
-import parking.manager.*;
-import parking.valet.*;
+import parking.manager.ParkingManager;
+import parking.valet.TaskStrategy;
+import parking.valet.Valet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Parking {
     private ParkingSpot[] parkingSpots;
-
     private List<Thread> valets;
     private int freeValets;
-
     private ParkingManager parkingManager;
 
     public Parking(int parkingSpotsNumber, int valetsNumber) {
@@ -46,7 +46,7 @@ public class Parking {
             // Start pickup process
             occupyValet();
             Car carParked = null;
-            while (carParked == null){
+            while (carParked == null) {
                 wait();
                 carParked = parkingManager.pickup(ticketId);
             }

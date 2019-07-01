@@ -28,15 +28,15 @@ class ParkingTicketManager {
         return generatedTicket.hashCode();
     }
 
-    void destroyTicket(int ticketId){
+    void destroyTicket(int ticketId) {
         ticketMap.remove(ticketId);
     }
 
-    Ticket getTicketFromId(int id){
+    Ticket getTicketFromId(int id) {
         return ticketMap.get(id);
     }
 
-    boolean containsTicket(int ticketId){
+    boolean containsTicket(int ticketId) {
         return ticketMap.containsKey(ticketId);
     }
 

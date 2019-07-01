@@ -6,7 +6,6 @@ public class ParkingSpot {
     private boolean isFree;
     private Car car;
 
-
     ParkingSpot() {
         this.isFree = true;
         this.car = null;

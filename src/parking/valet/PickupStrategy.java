@@ -4,7 +4,6 @@ import auto.Car;
 import parking.ParkingSpot;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class PickupStrategy extends TaskStrategy {
 
