@@ -35,6 +35,7 @@ public class Parking {
         deliveries = new LinkedList<>();
         // Initialize the empty queue of pickups
         pickups = new LinkedList<>();
+
     }
 
     public int delivery(Car car) throws ParkingFullException {
@@ -56,14 +57,11 @@ public class Parking {
         pickups.add(ticketId);
 
         occupyValet();
-
         /*
         Ticket ticket = parkingManager.getTicketFromId(ticketId);
          */
 
         parkingManager.destroyTicket(ticketId);
-
-        // Re
         return null;
     }
 

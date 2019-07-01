@@ -44,7 +44,7 @@ public class Driver implements Runnable {
         }
     }
 
-    private void sleepToPickup(){
+    private void sleepToPickup() {
         try {
             Thread.sleep(timeBeforePickup);
         } catch (InterruptedException e) {
