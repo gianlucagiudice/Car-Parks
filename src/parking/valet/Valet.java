@@ -1,10 +1,12 @@
 package parking.valet;
 
+import auto.Car;
 import parking.Parking;
 
 public class Valet implements Runnable {
 
     private Parking parking;
+    private Car car;
 
     public Valet(Parking parking) {
         this.parking = parking;
@@ -23,7 +25,7 @@ public class Valet implements Runnable {
 
     private void accomplishTask(TaskStrategy taskToAccomplish){
         try {
-            taskToAccomplish.accomplishTask();
+            this.car = taskToAccomplish.accomplishTask();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,4 +40,7 @@ public class Valet implements Runnable {
         }
     }
 
+    public Car getCar() {
+        return this.car;
+    }
 }

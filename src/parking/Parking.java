@@ -22,11 +22,20 @@ public class Parking {
 
     public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
         this.id = id;
-        this.parkingSpots = factorySpots(parkingSpotsNumber);
+        // Factory all parking spots
+        this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
+        // Factory all valets
         this.valets = factoryValets(valetsNumber);
+        // Start all valets
         runValets();
         this.freeValets = valetsNumber;
+        // Create a new parking manager
         this.parkingManager = new ParkingManager();
+        // Initialize the empty queue of deliveries
+        deliveries = new LinkedList<>();
+        // Initialize the empty queue of pickups
+        pickups = new LinkedList<>();
+
     }
 
     public int delivery(Car car) throws ParkingFullException {
@@ -42,10 +51,27 @@ public class Parking {
         return ticket;
     }
 
-    public Car pickup(int ticket) {
-        //TODO: Implement pickup car
+    public Car pickup(int ticketId) {
+
+        // Get the ticket from its ID
+        pickups.add(ticketId);
+
+        occupyValet();
+
+        /*
+        Ticket ticket = parkingManager.getTicketFromId(ticketId);
+         */
+
+        parkingManager.destroyTicket(ticketId);
+
+        // Re
         return null;
     }
+
+    public void giveBackCar(){
+
+    }
+
 
     public synchronized TaskStrategy accomplishTask() {
         TaskStrategy taskStrategy;
@@ -92,7 +118,7 @@ public class Parking {
         notifyAll();
     }
 
-    private ParkingSpot[] factorySpots(int parkingSpotsNumber) {
+    private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
         parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
             parkingSpots[i] = new ParkingSpot();

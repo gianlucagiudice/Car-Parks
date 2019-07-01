@@ -27,6 +27,10 @@ class ParkingManager {
         return generatedTicket.hashCode();
     }
 
+    void destroyTicket(int ticketId){
+        ticketMap.remove(ticketId);
+    }
+
     Ticket getTicketFromId(int id){
         return ticketMap.get(id);
     }
