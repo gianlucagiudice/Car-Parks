@@ -11,26 +11,19 @@ public class Valet implements Runnable {
 
     @Override
     public void run() {
-
-        while (true) {
-            try {
-                parking.accomplishTask().accomplish();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
+        while (true){
+            accomplishTask();
         }
     }
 
-    private void accomplishTask(TaskStrategy taskToAccomplish) {
+    private void accomplishTask() {
         try {
-            taskToAccomplish.accomplish();
+            parking.accomplishTask().accomplish();
+            parking.releaseValet();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
 
 
 }

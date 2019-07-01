@@ -30,16 +30,14 @@ public class Parking {
 
     public int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait an available valet
-        System.out.print("[" + getCurrentTime() + "]" + " Request for paking car: " +  car.toString() + "\n\t");
-
-        //System.out.print("\t");
+        //System.out.print("[" + getCurrentTime() + "]" + " Request for delivery car: " +  car.toString() + "\n\t");
         waitForValets();
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
-        System.out.println("\t" + "Ticked acquired with ID: " + ticketId);
+        //System.out.println("\t" + "Ticked acquired with ID: " + ticketId);
         // Occupy a valet in order to accomplish operation
         occupyValet();
-        System.out.println("\t" + "Valet start serving . . .");
+        //System.out.println("\t" + "Valet start serving . . .");
         // Valet accomplishes the task . . .
         return ticketId;
     }
@@ -80,13 +78,12 @@ public class Parking {
 
     private synchronized void waitForValets() throws InterruptedException {
         while (freeValets <= 0) {
-            System.out.println("No valets available, waiting. . .");
+            //System.out.println("No valets available, waiting. . .");
             wait();
         }
-        System.out.println( freeValets + " free valets, serving");
+        //System.out.println( freeValets + " free valets, serving");
 
     }
-
 
     private synchronized void occupyValet() {
         this.freeValets--;

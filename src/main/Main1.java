@@ -13,13 +13,5 @@ public class Main1 {
         d1.start();
 
 
-        /*
-        try {
-            System.out.println("ora aspetto un botto");
-            //Thread.sleep(50000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-         */
     }
 }
