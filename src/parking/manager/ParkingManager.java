@@ -49,10 +49,9 @@ public class ParkingManager {
 
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
         TaskStrategy taskStrategy = null;
-        System.out.println("waiting");
         if (deliveries.size() == 0 && pickups.size() == 0) {
-            System.out.println("waiting");
             wait();
+            System.out.println("waiting1");
         }
         else if (deliveries.size() >= pickups.size()) {
             Ticket ticket = getFirstDelivery();

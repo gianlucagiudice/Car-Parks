@@ -14,5 +14,6 @@ public class Main1 {
         int a  = 0;
         Thread d1 = new Thread(new Driver(p1, new Car("AB1234"), 1));
         d1.start();
+        System.out.println("ciaoCASDASDsa");
     }
 }

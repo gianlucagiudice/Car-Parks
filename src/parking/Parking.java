@@ -21,16 +21,18 @@ public class Parking {
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Factory all valets
         this.valets = factoryValets(valetsNumber);
-        // Start all valets
-        runValets();
         this.freeValets = valetsNumber;
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
-        System.out.println("ciao ciao");
+
     }
 
     public int delivery(Car car) throws FullParkingException, InterruptedException {
+        notifyAll();
         waitForValets();
+
+        valets.get(0).run();
+        System.out.println("fatto");
 
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
         occupyValet();
@@ -39,6 +41,8 @@ public class Parking {
     }
 
     public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
+        runValets();
+
         waitForValets();
 
         if (ticketId == null) {
@@ -105,6 +109,7 @@ public class Parking {
 
     public TaskStrategy accomplishTask() throws InterruptedException {
         System.out.println("ciao");
+        //Thread.sleep(20000);
         TaskStrategy t = this.parkingManager.accomplishTask();
 
         return t;
