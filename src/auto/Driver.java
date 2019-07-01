@@ -24,7 +24,8 @@ public class Driver implements Runnable {
         // Sleep before pickup
         sleepToPickup();
         // Pickup car
-        pickup();
+        // TODO: Pickup
+        //pickup();
     }
 
     private void delivery() {

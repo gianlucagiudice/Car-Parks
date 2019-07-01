@@ -47,20 +47,19 @@ public class ParkingManager {
             return pickups.put(ticketId, null);
     }
 
-    public synchronized TaskStrategy accomplishTask() throws InterruptedException {
+    public TaskStrategy accomplishTask() throws InterruptedException {
         TaskStrategy taskStrategy = null;
 
-        System.out.println("sto entrando nell'accomplish");
+
         if (deliveries.size() == 0 && pickups.size() == 0) {
-            System.out.println("ora però devo aspettare");
-            wait();
+
+            //wait();
+            return null;
         }
 
-        System.out.println("ci sono dopo qui");
 
         if (deliveries.size() >= pickups.size()) {
 
-            System.out.println("Ci sono piu' delivery");
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());
         } else {

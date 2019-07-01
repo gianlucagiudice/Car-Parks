@@ -21,9 +21,9 @@ class ParkingTicketManager {
     }
 
 
-    int factoryTicket(ParkingSpot targetSlot, Car car) {
+    int factoryTicket(ParkingSpot targetSpot, Car car) {
         // Generate the ticket
-        Ticket generatedTicket = new Ticket(targetSlot, car);
+        Ticket generatedTicket = new Ticket(targetSpot, car);
         this.ticketMap.put(generatedTicket.hashCode(), generatedTicket);
         return generatedTicket.hashCode();
     }

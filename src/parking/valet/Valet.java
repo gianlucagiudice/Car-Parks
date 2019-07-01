@@ -11,7 +11,7 @@ public class Valet implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("nella run del valet");
+
         while (true) {
             try {
                 parking.accomplishTask().accomplish();
