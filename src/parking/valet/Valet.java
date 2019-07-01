@@ -11,8 +11,10 @@ public class Valet implements Runnable {
 
     @Override
     public void run() {
+        nothingToDo();
         while (true) {
             TaskStrategy taskToAccomplish = parking.accomplishTask();
+            System.out.println(taskToAccomplish);
             if (taskToAccomplish == null)
                 nothingToDo();
             else {

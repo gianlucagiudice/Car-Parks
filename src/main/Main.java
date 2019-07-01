@@ -1,5 +1,5 @@
 package main;
 
 public interface Main {
-    int valetSleep = 2000;
+    int valetSleep = 3000;
 }
