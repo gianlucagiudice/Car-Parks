@@ -17,8 +17,20 @@ public class Parking {
 
     private ParkingManager parkingManager;
 
+    /**
+     * Queue of tickets corresponding to the cars delivered by drivers to the valets
+     */
     private Queue<Integer> deliveries;
+    
+    /**
+     * Queue of tickets corresponding to the cars that drivers requested to pickup
+     */
     private Queue<Integer> pickups;
+    
+    /**
+     * Queue of tickets corresponding to the cars picked-up by valets to be given back to drivers
+     */
+    private Queue<Integer> giveBackCars;
 
     public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
         this.id = id;
@@ -35,7 +47,8 @@ public class Parking {
         deliveries = new LinkedList<>();
         // Initialize the empty queue of pickups
         pickups = new LinkedList<>();
-
+        // Initialize the empty queue of cars picked-up by valets to be given back to drivers
+        giveBackCars = new LinkedList<>();
     }
 
     public int delivery(Car car) throws ParkingFullException {
@@ -43,30 +56,26 @@ public class Parking {
         int ticket;
         // Acquire a free parking spot
         targetSpot = parkingManager.acquireParkingSpot(this.parkingSpots);
-        // Factory ticket
+        // Factory the ticket
         ticket = parkingManager.factoryTicket(targetSpot, car);
         deliveries.add(ticket);
         occupyValet();
-        // Valet accomplishes the task
+        // The valet accomplishes the task (he deliveries the car)
         return ticket;
     }
 
     public Car pickup(int ticketId) {
-
         // Get the ticket from its ID
         pickups.add(ticketId);
-
         occupyValet();
-        /*
-        Ticket ticket = parkingManager.getTicketFromId(ticketId);
-         */
-
-        parkingManager.destroyTicket(ticketId);
+        
+        // The valet accomplishes the task (he pickups the car)
+        parkingManager.deleteTicket(ticketId);
         return null;
     }
 
     public void giveBackCar(){
-
+    	
     }
 
 
@@ -111,7 +120,7 @@ public class Parking {
 
     public synchronized void releaseValet() {
         this.freeValets++;
-        // Notify all waiting drivers for a new delivery/pickup valet
+        // Notify all waiting drivers for a new free delivery/pickup valet
         notifyAll();
     }
 
