@@ -6,19 +6,25 @@ import java.util.Objects;
 
 public class Ticket {
 
-	private int parkID;
 	private ParkingSpot carParkedSpot;
-	private Car carParked;
+	private Car parkedCar;
 
 
-	Ticket(int parkID, ParkingSpot carParkedSpot, Car carParked) {
-		this.parkID = parkID;
+	Ticket(ParkingSpot carParkedSpot, Car parkedCar) {
 		this.carParkedSpot = carParkedSpot;
-		this.carParked = carParked;
+		this.parkedCar = parkedCar;
+	}
+
+	ParkingSpot getCarParkedSpot() {
+		return carParkedSpot;
+	}
+
+	Car getParkedCar() {
+		return parkedCar;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(parkID, carParkedSpot, carParked);
+		return Objects.hash(carParkedSpot, parkedCar);
 	}
 }

@@ -1,6 +1,10 @@
 package parking;
 
 import auto.Car;
+import parking.valet.DeliveryStrategy;
+import parking.valet.PickupStrategy;
+import parking.valet.TaskStrategy;
+import parking.valet.Valet;
 
 import java.util.*;
 
@@ -20,10 +24,9 @@ public class Parking {
         this.id = id;
         this.parkingSpots = factorySpots(parkingSpotsNumber);
         this.valets = factoryValets(valetsNumber);
-        startValets();
+        runValets();
         this.freeValets = valetsNumber;
-        // ParkingManager must contain the id of the parking
-        this.parkingManager = new ParkingManager(this.hashCode());
+        this.parkingManager = new ParkingManager();
     }
 
     public int delivery(Car car) throws ParkingFullException {
@@ -33,11 +36,9 @@ public class Parking {
         targetSpot = parkingManager.acquireParkingSpot(this.parkingSpots);
         // Factory ticket
         ticket = parkingManager.factoryTicket(targetSpot, car);
-        // TODO: Parking a car
+        deliveries.add(ticket);
         occupyValet();
-        //deliveries
-        releaseValet();
-        notifyAll();
+        // Valet accomplishes the task
         return ticket;
     }
 
@@ -46,27 +47,49 @@ public class Parking {
         return null;
     }
 
+    public synchronized TaskStrategy accomplishTask() {
+        TaskStrategy taskStrategy;
+        if (deliveries.size() == 0 && pickups.size() == 0)
+            taskStrategy = null;
+        else if (deliveries.size() >= pickups.size()) {
+            Ticket ticket = getFirstFromQueue(deliveries);
+            taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());
+        } else {
+            Ticket ticket = getFirstFromQueue(pickups);
+            taskStrategy = new PickupStrategy(ticket.getCarParkedSpot());
+        }
+        return taskStrategy;
+    }
+
+    private Ticket getFirstFromQueue(Queue<Integer> queue) {
+        int ticketId = queue.remove();
+        return parkingManager.getTicketFromId(ticketId);
+    }
 
     private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
-            this.valets.add(new Thread(new Valet()));
+            this.valets.add(new Thread(new Valet(this)));
         }
         return valets;
     }
 
-    private void startValets() {
+    private void runValets() {
         for (Thread valet : valets) {
-            valet.start();
+            valet.run();
         }
     }
 
-    private synchronized void occupyValet(){
+    private synchronized void occupyValet() {
         this.freeValets--;
+        // Notify all waiting valets for a new task
+        notifyAll();
     }
 
-    private synchronized void releaseValet(){
+    public synchronized void releaseValet() {
         this.freeValets++;
+        // Notify all waiting drivers for a new delivery/pickup valet
+        notifyAll();
     }
 
     private ParkingSpot[] factorySpots(int parkingSpotsNumber) {
@@ -77,23 +100,8 @@ public class Parking {
         return parkingSpots;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public synchronized int getFreeValets() {
         return freeValets;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Parking{" +
-                "id='" + id + '\'' +
-                '}';
-    }
 }

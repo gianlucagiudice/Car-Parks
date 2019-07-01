@@ -19,12 +19,17 @@ public class ParkingSpot {
     public Car release() {
         this.isFree = true;
         Car parked = this.car;
-        car = null;
+        this.car = null;
         return parked;
     }
 
     void occupy() {
         this.isFree = false;
+    }
+
+    public void occupy(Car car) {
+        this.isFree = false;
+        this.car = car;
     }
 
 }
