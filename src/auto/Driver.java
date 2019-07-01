@@ -27,14 +27,6 @@ public class Driver implements Runnable {
         pickup();
     }
 
-    private void sleepToPickup() {
-        try {
-            Thread.sleep(timeBeforePickup);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void delivery(){
         try {
             this.ticketId = this.targetParking.delivery(this.car);
@@ -42,6 +34,14 @@ public class Driver implements Runnable {
             e.printStackTrace();
         }
         this.car = null;
+    }
+
+    private void sleepToPickup() {
+        try {
+            Thread.sleep(timeBeforePickup);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void pickup() {
@@ -53,12 +53,5 @@ public class Driver implements Runnable {
         this.ticketId = null;
     }
 
-    public Car getCar() {
-        return car;
-    }
-
-    public void setParking(Parking parkingTaskManager) {
-        this.targetParking = parkingTaskManager;
-    }
 }
 
