@@ -19,24 +19,12 @@ public class Driver implements Runnable {
 
     @Override
     public void run() {
-        waitForValets();
         // Parking the car
         delivery();
-
+        // Sleep before pickup
         sleepToPickup();
-
-        waitForValets();
+        // Pickup car
         pickup();
-    }
-
-    private void waitForValets() {
-        while (targetParking.getFreeValets() <= 0) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void sleepToPickup() {
@@ -50,7 +38,7 @@ public class Driver implements Runnable {
     private void delivery(){
         try {
             this.ticketId = this.targetParking.delivery(this.car);
-        } catch (FullParkingException e) {
+        } catch (FullParkingException | InterruptedException e) {
             e.printStackTrace();
         }
         this.car = null;

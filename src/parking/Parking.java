@@ -9,7 +9,6 @@ import parking.valet.*;
 import java.util.*;
 
 public class Parking {
-    private String id;
     private ParkingSpot[] parkingSpots;
 
     private List<Thread> valets;
@@ -17,9 +16,7 @@ public class Parking {
 
     private ParkingManager parkingManager;
 
-
-    public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
-        this.id = id;
+    public Parking(int parkingSpotsNumber, int valetsNumber) {
         // Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Factory all valets
@@ -31,15 +28,18 @@ public class Parking {
         this.parkingManager = new ParkingManager();
     }
 
-    public int delivery(Car car) throws FullParkingException {
+    public int delivery(Car car) throws FullParkingException, InterruptedException {
+        waitForValets();
+
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
         occupyValet();
         // Valet accomplishes the task
         return ticketId;
     }
 
-
     public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
+        waitForValets();
+
         if (ticketId == null) {
             return null;
         } else {
@@ -56,7 +56,6 @@ public class Parking {
         }
     }
 
-
     private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
@@ -65,10 +64,11 @@ public class Parking {
         return valets;
     }
 
-
-
-    //TODO: Wait for valets
-
+    private void waitForValets() throws InterruptedException {
+        while (getFreeValets() <= 0) {
+            wait();
+        }
+    }
 
     private void runValets() {
         for (Thread valet : valets) {
@@ -82,7 +82,6 @@ public class Parking {
         notifyAll();
     }
 
-    // TODO: Rilasciare il valet dopo il pickup
     public synchronized void releaseValet() {
         this.freeValets++;
         // Notify all waiting drivers for a new delivery/pickup valet
@@ -97,7 +96,7 @@ public class Parking {
         return parkingSpots;
     }
 
-    public synchronized int getFreeValets() {
+    private synchronized int getFreeValets() {
         return freeValets;
     }
 
