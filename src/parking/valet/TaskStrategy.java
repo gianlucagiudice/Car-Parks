@@ -1,6 +1,5 @@
 package parking.valet;
 
-import auto.Car;
 import main.Main;
 import parking.ParkingSpot;
 
@@ -11,9 +10,18 @@ public abstract class TaskStrategy {
         this.targetParkingSpot = targetParkingSpot;
     }
 
-    abstract Car accomplishTask() throws InterruptedException;
+    abstract void accomplish() throws InterruptedException;
 
     void sleep() throws InterruptedException {
-        Thread.sleep(Main.valetSleep);
+        sleep(Main.valetSleep);
+    }
+
+    void sleepHalf() throws InterruptedException {
+        sleep(Main.valetSleep/2);
+    }
+
+    private void sleep(int time) throws InterruptedException {
+        Thread.sleep(time);
+
     }
 }

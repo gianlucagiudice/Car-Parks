@@ -1,15 +1,13 @@
 package parking.valet;
 
-import auto.Car;
 import parking.Parking;
 
 public class Valet implements Runnable {
 
     private Parking parking;
-    private Car car;
 
     public Valet(Parking parking) {
-        this.parking = parking;
+        this.parking= parking;
     }
 
     @Override
@@ -18,20 +16,19 @@ public class Valet implements Runnable {
             TaskStrategy taskToAccomplish = parking.accomplishTask();
             if (taskToAccomplish == null)
                 nothingToDo();
-            else
+            else {
                 accomplishTask(taskToAccomplish);
+                nothingToDo();
+            }
         }
     }
 
     private void accomplishTask(TaskStrategy taskToAccomplish){
         try {
-            this.car = taskToAccomplish.accomplishTask();
+            taskToAccomplish.accomplish();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(taskToAccomplish instanceof PickupStrategy)
-        	this.parking.addGiveBackCar(car);
-        parking.releaseValet();
     }
 
     private void nothingToDo(){
@@ -39,10 +36,8 @@ public class Valet implements Runnable {
             wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            parking.releaseValet();
         }
     }
 
-    public Car getCar() {
-        return this.car;
-    }
 }

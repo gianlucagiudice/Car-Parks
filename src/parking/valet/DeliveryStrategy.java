@@ -3,8 +3,9 @@ package parking.valet;
 import auto.Car;
 import parking.ParkingSpot;
 
+
 public class DeliveryStrategy extends TaskStrategy {
-    Car targetCar;
+    private Car targetCar;
 
     public DeliveryStrategy(ParkingSpot targetParkingSpot, Car targetCar) {
         super(targetParkingSpot);
@@ -12,9 +13,8 @@ public class DeliveryStrategy extends TaskStrategy {
     }
 
     @Override
-    Car accomplishTask() throws InterruptedException {
+    void accomplish() throws InterruptedException {
         sleep();
         targetParkingSpot.occupy(targetCar);
-        return null;
     }
 }

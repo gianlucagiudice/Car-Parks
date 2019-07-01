@@ -3,15 +3,25 @@ package parking.valet;
 import auto.Car;
 import parking.ParkingSpot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PickupStrategy extends TaskStrategy {
 
-    public PickupStrategy(ParkingSpot targetParkingSpot) {
+    private HashMap<Integer, Car> givesBack;
+    private int ticketId;
+
+    public PickupStrategy(ParkingSpot targetParkingSpot, HashMap<Integer, Car> givesBack, int ticketId) {
         super(targetParkingSpot);
+        this.givesBack = givesBack;
+        this.ticketId = ticketId;
     }
 
     @Override
-    Car accomplishTask() throws InterruptedException {
-        sleep();
-        return targetParkingSpot.release();
+    void accomplish() throws InterruptedException {
+        sleepHalf();
+        Car carTarget = targetParkingSpot.release();
+        sleepHalf();
+        givesBack.put(ticketId, carTarget);
     }
 }

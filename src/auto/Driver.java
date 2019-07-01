@@ -1,37 +1,32 @@
 package auto;
 
 import parking.Parking;
-import parking.ParkingFullException;
+import parking.exceptions.CarNotFoundException;
+import parking.exceptions.FullParkingException;
 
 public class Driver implements Runnable {
     private Parking targetParking;
     private Car car;
-    private Integer ticket;
+    private Integer ticketId;
     private int timeBeforePickup;
 
     public Driver(Parking targetParking, Car car, int timeBeforePickup) {
         this.targetParking = targetParking;
         this.car = car;
-        this.ticket = null;
+        this.ticketId = null;
         this.timeBeforePickup = timeBeforePickup;
     }
 
     @Override
     public void run() {
         waitForValets();
-
         // Parking the car
-        try {
-            ticket = delivery();
-        } catch (ParkingFullException e) {
-            // Parking is full;
-            e.printStackTrace();
-        }
+        delivery();
 
         sleepToPickup();
 
         waitForValets();
-        car = pickup();
+        pickup();
     }
 
     private void waitForValets() {
@@ -52,24 +47,30 @@ public class Driver implements Runnable {
         }
     }
 
-    private int delivery() throws ParkingFullException {
-        int tickedId = this.targetParking.delivery(this.car);
+    private void delivery(){
+        try {
+            this.ticketId = this.targetParking.delivery(this.car);
+        } catch (FullParkingException e) {
+            e.printStackTrace();
+        }
         this.car = null;
-        return tickedId;
     }
 
-    private Car pickup() {
-        Car car = targetParking.pickup(this.ticket);
-        this.ticket = null;
-        return car;
+    private void pickup() {
+        try {
+            this.car = this.targetParking.pickup(ticketId);
+        } catch (CarNotFoundException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.ticketId = null;
     }
 
     public Car getCar() {
         return car;
     }
 
-    public void setParking(Parking parking) {
-        this.targetParking = parking;
+    public void setParking(Parking parkingTaskManager) {
+        this.targetParking = parkingTaskManager;
     }
 }
 

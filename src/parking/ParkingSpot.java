@@ -12,7 +12,7 @@ public class ParkingSpot {
         this.car = null;
     }
 
-    boolean isFree() {
+    public boolean isFree() {
         return isFree;
     }
 
@@ -23,7 +23,7 @@ public class ParkingSpot {
         return parkedCar;
     }
 
-    void occupy() {
+    public void occupy() {
         this.isFree = false;
     }
 

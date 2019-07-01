@@ -1,10 +1,10 @@
 package parking;
 
 import auto.Car;
-import parking.valet.DeliveryStrategy;
-import parking.valet.PickupStrategy;
-import parking.valet.TaskStrategy;
-import parking.valet.Valet;
+import parking.exceptions.CarNotFoundException;
+import parking.exceptions.FullParkingException;
+import parking.manager.*;
+import parking.valet.*;
 
 import java.util.*;
 
@@ -17,20 +17,6 @@ public class Parking {
 
     private ParkingManager parkingManager;
 
-    /**
-     * Queue of tickets corresponding to the cars delivered by drivers to the valets
-     */
-    private Queue<Integer> deliveries;
-    
-    /**
-     * Queue of tickets corresponding to the cars that drivers requested to pickup
-     */
-    private Queue<Integer> pickups;
-    
-    /**
-     * List of tickets corresponding to the cars picked-up by valets to be given back to drivers
-     */
-    private Map<Integer, Car> giveBackCars;
 
     public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
         this.id = id;
@@ -43,26 +29,34 @@ public class Parking {
         this.freeValets = valetsNumber;
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
-        // Initialize the empty queue of deliveries
-        deliveries = new LinkedList<>();
-        // Initialize the empty queue of pickups
-        pickups = new LinkedList<>();
-        // Initialize the empty queue of cars picked-up by valets to be given back to drivers
-        giveBackCars = new HashMap<>();
     }
 
-    public synchronized int getFreeValets() {
-        return freeValets;
+    public int delivery(Car car) throws FullParkingException {
+        int ticketId = parkingManager.delivery(car, this.parkingSpots);
+        occupyValet();
+        // Valet accomplishes the task
+        return ticketId;
     }
-    
-    private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
-        parkingSpots = new ParkingSpot[parkingSpotsNumber];
-        for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot();
+
+
+    public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
+        if (ticketId == null) {
+            return null;
+        } else {
+            // Start pickup process
+            occupyValet();
+            Car carParked = null;
+            while (carParked == null){
+                wait();
+                carParked = parkingManager.pickup(ticketId);
+            }
+            parkingManager.pickupCompleted(ticketId);
+            releaseValet();
+            return carParked;
         }
-        return parkingSpots;
     }
-    
+
+
     private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
@@ -70,6 +64,11 @@ public class Parking {
         }
         return valets;
     }
+
+
+
+    //TODO: Wait for valets
+
 
     private void runValets() {
         for (Thread valet : valets) {
@@ -83,63 +82,27 @@ public class Parking {
         notifyAll();
     }
 
+    // TODO: Rilasciare il valet dopo il pickup
     public synchronized void releaseValet() {
         this.freeValets++;
-        // Notify all waiting drivers for a new free delivery/pickup valet
+        // Notify all waiting drivers for a new delivery/pickup valet
         notifyAll();
     }
-    
-    private Ticket getFirstFromQueue(Queue<Integer> queue) {
-        int ticketId = queue.remove();
-        return parkingManager.getTicketFromId(ticketId);
-    }
-    
-    private void addGiveBackCar(Car car) {
-    	this.giveBackCars.put();
-    }
-    
-    public int delivery(Car car) throws ParkingFullException {
-        ParkingSpot targetSpot;
-        int ticket;
-        // Acquire a free parking spot
-        targetSpot = parkingManager.acquireParkingSpot(this.parkingSpots);
-        // Factory the ticket
-        ticket = parkingManager.factoryTicket(targetSpot, car);
-        deliveries.add(ticket);
-        occupyValet();
-        // The valet accomplishes the task (he deliveries the car) and he becomes free
-        return ticket;
-    }
 
-    public Car pickup(int ticketId) {
-        // Get the ticket from its ID
-        pickups.add(ticketId);
-        occupyValet();
-        // The valet accomplishes the task (he pickups the car) and he becomes free
-        while(!giveBackCars.contains(ticketId) {
-        	wait();
+    private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
+        parkingSpots = new ParkingSpot[parkingSpotsNumber];
+        for (int i = 0; i < parkingSpots.length; i++) {
+            parkingSpots[i] = new ParkingSpot();
         }
-        Car car = giveBackCar(ticketId);
-        parkingManager.deleteTicket(ticketId);
-        return car;
+        return parkingSpots;
     }
 
-    public Car giveBackCar(int ticketId){
-    	giveBackCars.remove(ticketId);
-    	return parkingManager.getTicketFromId(ticketId).getParkedCar();
+    public synchronized int getFreeValets() {
+        return freeValets;
     }
 
-    public synchronized TaskStrategy accomplishTask() {
-        TaskStrategy taskStrategy;
-        if (deliveries.size() == 0 && pickups.size() == 0)
-            taskStrategy = null;
-        else if (deliveries.size() >= pickups.size()) {
-            Ticket ticket = getFirstFromQueue(deliveries);
-            taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());
-        } else {
-            Ticket ticket = getFirstFromQueue(pickups);
-            taskStrategy = new PickupStrategy(ticket.getCarParkedSpot());
-        }
-        return taskStrategy;
+    public TaskStrategy accomplishTask() {
+        return parkingManager.accomplishTask();
     }
+
 }

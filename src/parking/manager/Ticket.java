@@ -1,6 +1,7 @@
-package parking;
+package parking.manager;
 
 import auto.Car;
+import parking.ParkingSpot;
 
 import java.util.Objects;
 
@@ -8,7 +9,6 @@ public class Ticket {
 
 	private ParkingSpot carParkedSpot;
 	private Car parkedCar;
-
 
 	Ticket(ParkingSpot carParkedSpot, Car parkedCar) {
 		this.carParkedSpot = carParkedSpot;
