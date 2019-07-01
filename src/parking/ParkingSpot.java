@@ -18,9 +18,9 @@ public class ParkingSpot {
 
     public Car release() {
         this.isFree = true;
-        Car parked = this.car;
+        Car parkedCar = this.car;
         this.car = null;
-        return parked;
+        return parkedCar;
     }
 
     void occupy() {

@@ -14,5 +14,4 @@ public class PickupStrategy extends TaskStrategy {
         sleep();
         return targetParkingSpot.release();
     }
-
 }

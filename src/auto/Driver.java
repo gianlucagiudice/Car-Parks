@@ -59,20 +59,6 @@ public class Driver implements Runnable {
     }
 
     private Car pickup() {
-        /*
-        Car car = null;
-        while (car == null){
-            car = targetParking.pickup(this.ticket);
-        }
-        this.ticket = null;
-        while (this.car == null) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-         */
         Car car = targetParking.pickup(this.ticket);
         this.ticket = null;
         return car;

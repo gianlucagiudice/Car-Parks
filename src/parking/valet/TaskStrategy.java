@@ -16,5 +16,4 @@ public abstract class TaskStrategy {
     void sleep() throws InterruptedException {
         Thread.sleep(Main.valetSleep);
     }
-
 }

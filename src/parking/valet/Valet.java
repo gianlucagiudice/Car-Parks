@@ -29,6 +29,8 @@ public class Valet implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(taskToAccomplish instanceof PickupStrategy)
+        	this.parking.addGiveBackCar(car);
         parking.releaseValet();
     }
 
