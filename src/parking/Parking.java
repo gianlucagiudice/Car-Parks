@@ -19,29 +19,37 @@ public class Parking {
     public Parking(int parkingSpotsNumber, int valetsNumber) {
         // Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
-        // Factory all valets
-        this.valets = factoryValets(valetsNumber);
-        this.freeValets = valetsNumber;
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
-
+        System.out.println("sono entrato");
+        // Factory all valets
+        this.freeValets = valetsNumber;
+        this.valets = factoryValets(valetsNumber);
     }
 
     public int delivery(Car car) throws FullParkingException, InterruptedException {
-        notifyAll();
-        waitForValets();
 
-        valets.get(0).run();
+
+        //waitForValets();
+
         System.out.println("fatto");
 
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
+
+        System.out.println("Ticket ID: " + ticketId);
+
+
         occupyValet();
         // Valet accomplishes the task
+
+        System.out.println("deivery finito");
+
+
         return ticketId;
     }
 
     public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
-        runValets();
+        //runValets();
 
         waitForValets();
 
@@ -53,7 +61,7 @@ public class Parking {
             occupyValet();
             Car carParked = null;
             while (carParked == null) {
-                wait();
+                //wait();
                 // TODO: Spostare sopra
                 carParked = parkingManager.pickup(ticketId);
             }
@@ -61,12 +69,15 @@ public class Parking {
             releaseValet();
             return carParked;
         }
+
     }
 
     private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
-            this.valets.add(new Thread(new Valet(this)));
+            Thread valet = new Thread(new Valet(this));
+            this.valets.add(valet);
+            valet.start();
         }
         return valets;
     }
@@ -77,16 +88,17 @@ public class Parking {
         }
     }
 
+    //TODO: startValets
     private void runValets() {
         for (Thread valet : valets) {
-            valet.run();
+            System.out.println("sto facendo il runValets");
+            valet.start();
+            System.out.println(valet);
         }
     }
 
     private synchronized void occupyValet() {
         this.freeValets--;
-        // Notify all waiting valets for a new task
-        notifyAll();
     }
 
     public synchronized void releaseValet() {
@@ -108,9 +120,12 @@ public class Parking {
     }
 
     public TaskStrategy accomplishTask() throws InterruptedException {
-        System.out.println("ciao");
+        System.out.println("Prima dell'accomplish");
         //Thread.sleep(20000);
         TaskStrategy t = this.parkingManager.accomplishTask();
+        System.out.println("Dopo accomplish");
+        //wait();
+        System.out.println("Dopo wait accomplish");
 
         return t;
         //return parkingManager.accomplishTask();

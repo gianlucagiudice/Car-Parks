@@ -15,5 +15,12 @@ public class Main1 {
         Thread d1 = new Thread(new Driver(p1, new Car("AB1234"), 1));
         d1.start();
         System.out.println("ciaoCASDASDsa");
+
+        try {
+            System.out.println("ora aspetto un botto");
+            Thread.sleep(50000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
