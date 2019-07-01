@@ -35,7 +35,6 @@ public class Parking {
         deliveries = new LinkedList<>();
         // Initialize the empty queue of pickups
         pickups = new LinkedList<>();
-
     }
 
     public int delivery(Car car) throws ParkingFullException {

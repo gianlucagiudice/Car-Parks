@@ -7,15 +7,19 @@ public class Driver implements Runnable {
     private Parking targetParking;
     private Car car;
     private Integer ticket;
+    private int timeBeforePickup;
 
-    public Driver(Parking targetParking, Car car) {
+    public Driver(Parking targetParking, Car car, int timeBeforePickup) {
         this.targetParking = targetParking;
         this.car = car;
+        this.ticket = null;
+        this.timeBeforePickup = timeBeforePickup;
     }
 
     @Override
     public void run() {
         waitForValets();
+
         // Parking the car
         try {
             ticket = delivery();
@@ -23,6 +27,10 @@ public class Driver implements Runnable {
             // Parking is full;
             e.printStackTrace();
         }
+
+        sleepToPickup();
+
+        waitForValets();
         car = pickup();
     }
 
@@ -33,6 +41,14 @@ public class Driver implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void sleepToPickup(){
+        try {
+            Thread.sleep(timeBeforePickup);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
