@@ -11,16 +11,14 @@ public class Valet implements Runnable {
 
     @Override
     public void run() {
-        nothingToDo();
         while (true) {
-            TaskStrategy taskToAccomplish = parking.accomplishTask();
-            System.out.println(taskToAccomplish);
-            if (taskToAccomplish == null)
-                nothingToDo();
-            else {
-                accomplishTask(taskToAccomplish);
-                nothingToDo();
+            try {
+                parking.accomplishTask().accomplish();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
+
         }
     }
 
@@ -32,13 +30,6 @@ public class Valet implements Runnable {
         }
     }
 
-    private void nothingToDo() {
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            parking.releaseValet();
-        }
-    }
+
 
 }

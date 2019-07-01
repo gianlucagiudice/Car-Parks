@@ -43,13 +43,17 @@ public class ParkingManager {
         if (pickups.containsKey(ticketId))
             return pickups.get(ticketId);
         else
+            // TODO: Prepara la conegna. RequestPickup
             return pickups.put(ticketId, null);
     }
 
-    public synchronized TaskStrategy accomplishTask() {
-        TaskStrategy taskStrategy;
-        if (deliveries.size() == 0 && pickups.size() == 0)
-            taskStrategy = null;
+    public synchronized TaskStrategy accomplishTask() throws InterruptedException {
+        TaskStrategy taskStrategy = null;
+        System.out.println("waiting");
+        if (deliveries.size() == 0 && pickups.size() == 0) {
+            System.out.println("waiting");
+            wait();
+        }
         else if (deliveries.size() >= pickups.size()) {
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());

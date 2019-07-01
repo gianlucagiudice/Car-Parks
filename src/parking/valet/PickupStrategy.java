@@ -7,12 +7,12 @@ import java.util.HashMap;
 
 public class PickupStrategy extends TaskStrategy {
 
-    private HashMap<Integer, Car> givesBack;
+    private HashMap<Integer, Car> pickus;
     private int ticketId;
 
-    public PickupStrategy(ParkingSpot targetParkingSpot, HashMap<Integer, Car> givesBack, int ticketId) {
+    public PickupStrategy(ParkingSpot targetParkingSpot, HashMap<Integer, Car> pickus, int ticketId) {
         super(targetParkingSpot);
-        this.givesBack = givesBack;
+        this.pickus = pickus;
         this.ticketId = ticketId;
     }
 
@@ -21,6 +21,6 @@ public class PickupStrategy extends TaskStrategy {
         sleepHalf();
         Car carTarget = targetParkingSpot.release();
         sleepHalf();
-        givesBack.put(ticketId, carTarget);
+        pickus.put(ticketId, carTarget);
     }
 }

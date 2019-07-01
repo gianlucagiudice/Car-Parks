@@ -26,6 +26,7 @@ public class Parking {
         this.freeValets = valetsNumber;
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
+        System.out.println("ciao ciao");
     }
 
     public int delivery(Car car) throws FullParkingException, InterruptedException {
@@ -44,10 +45,12 @@ public class Parking {
             return null;
         } else {
             // Start pickup process
+            // TODO: SPostare sopra pickup
             occupyValet();
             Car carParked = null;
             while (carParked == null) {
                 wait();
+                // TODO: Spostare sopra
                 carParked = parkingManager.pickup(ticketId);
             }
             parkingManager.pickupCompleted(ticketId);
@@ -100,8 +103,12 @@ public class Parking {
         return freeValets;
     }
 
-    public TaskStrategy accomplishTask() {
-        return parkingManager.accomplishTask();
+    public TaskStrategy accomplishTask() throws InterruptedException {
+        System.out.println("ciao");
+        TaskStrategy t = this.parkingManager.accomplishTask();
+
+        return t;
+        //return parkingManager.accomplishTask();
     }
 
 }
