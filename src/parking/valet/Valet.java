@@ -1,10 +1,11 @@
 package parking.valet;
 
 import parking.Parking;
-import parking.manager.PrintInfo;
+import util.Logger;
 
-public class Valet implements Runnable {
+public class Valet extends Logger implements Runnable {
     private Parking parking;
+    private TaskStrategy taskToAccomplish;
 
     public Valet(Parking parking) {
         this.parking = parking;
@@ -12,18 +13,34 @@ public class Valet implements Runnable {
 
     @Override
     public void run() {
-        while (true){
+        while (true) {
             accomplishTask();
         }
     }
 
     private void accomplishTask() {
         try {
-            parking.accomplishTask().accomplish();
+            this.taskToAccomplish = parking.accomplishTask();
+
+            if (taskToAccomplish instanceof DeliveryStrategy)
+                setOperation(Operation.delivering);
+            else
+                setOperation(Operation.pickingUp);
+
+            taskToAccomplish.accomplish();
+
+            setOperation(Operation.waiting);
             parking.releaseValet();
-            PrintInfo.valetReleased(Thread.currentThread());
+            this.taskToAccomplish = null;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Valet{" +
+                "parking=" + parking +
+                "} ";
     }
 }

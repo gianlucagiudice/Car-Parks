@@ -39,5 +39,4 @@ class ParkingTicketManager {
     boolean containsTicket(int ticketId) {
         return ticketMap.containsKey(ticketId);
     }
-
 }
