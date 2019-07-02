@@ -1,15 +1,12 @@
 package parking;
 
 import auto.Car;
-import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 import parking.manager.ParkingManager;
 import parking.valet.TaskStrategy;
 import parking.valet.Valet;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Parking {
@@ -42,28 +39,20 @@ public class Parking {
         return ticketId;
     }
 
-    public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
-        //runValets();
-
+    public synchronized Car pickup(Integer ticketId) throws InterruptedException {
         waitForValets();
-
-        if (ticketId == null) {
-            return null;
-        } else {
-            // Start pickup process
-            // TODO: SPostare sopra pickup
-            occupyValet();
-            Car carParked = null;
-            while (carParked == null) {
-                //wait();
-                // TODO: Spostare sopra
-                carParked = parkingManager.pickup(ticketId);
-            }
-            parkingManager.pickupCompleted(ticketId);
-            releaseValet();
-            return carParked;
-        }
-
+        parkingManager.prepareParking(ticketId);
+        // Start pickup process
+        occupyValet();
+        Car carParked;
+        do {
+            carParked = parkingManager.pickup(ticketId);
+            if (carParked == null)
+                wait();
+        }while (carParked == null);
+        //releaseValet();
+        parkingManager.pickupCompleted(ticketId);
+        return carParked;
     }
 
     private List<Thread> factoryValets(int valetsNumber) {
@@ -77,17 +66,17 @@ public class Parking {
     }
 
     private synchronized void waitForValets() throws InterruptedException {
+        // TODO: Devo notificare che non c'è più un valet libero
         while (freeValets <= 0) {
             //System.out.println("No valets available, waiting. . .");
             wait();
         }
         //System.out.println( freeValets + " free valets, serving");
-
+        this.freeValets--;
     }
 
     private synchronized void occupyValet() {
-        this.freeValets--;
-        // Notify all valet for a new task to complete
+        // Notify all valet for a new task to accomplish
         notifyAll();
     }
 
@@ -106,20 +95,12 @@ public class Parking {
     }
 
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
-
-        TaskStrategy t = this.parkingManager.accomplishTask();
-        while (t == null){
+        TaskStrategy taskToAccomplish = this.parkingManager.accomplishTask();
+        while (taskToAccomplish == null) {
             wait();
-            t = this.parkingManager.accomplishTask();
-
+            taskToAccomplish = this.parkingManager.accomplishTask();
         }
-
-
-        return t;
-        //return parkingManager.accomplishTask();
+        return taskToAccomplish;
     }
 
-    private String getCurrentTime(){
-        return new SimpleDateFormat("HH:mm:ss:SSS").format(new Date());
-    }
 }

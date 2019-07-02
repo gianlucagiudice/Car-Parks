@@ -1,7 +1,6 @@
 package auto;
 
 import parking.Parking;
-import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 
 public class Driver implements Runnable {
@@ -24,8 +23,7 @@ public class Driver implements Runnable {
         // Sleep before pickup
         sleepToPickup();
         // Pickup car
-        // TODO: Pickup
-        //pickup();
+        pickup();
     }
 
     private void delivery() {
@@ -47,8 +45,8 @@ public class Driver implements Runnable {
 
     private void pickup() {
         try {
-            this.car = this.targetParking.pickup(ticketId);
-        } catch (CarNotFoundException | InterruptedException e) {
+            this.car = this.targetParking.pickup(this.ticketId);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.ticketId = null;
