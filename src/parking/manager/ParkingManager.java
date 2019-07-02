@@ -61,11 +61,11 @@ public class ParkingManager {
         if (deliveries.size() >= pickups.size()) {
 
             Ticket ticket = getFirstDelivery();
-            taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());
+            taskStrategy = new DeliveryStrategy(ticket.getParkedCarSpot(), ticket.getParkedCar());
         } else {
             Ticket ticket = getFirstPickup();
             //ParkingSpot parkingSpotTarget = ticket.getCarParkedSpot()
-            taskStrategy = new PickupStrategy(ticket.getCarParkedSpot(), pickups, ticket.hashCode());
+            taskStrategy = new PickupStrategy(ticket.getParkedCarSpot(), pickups, ticket.hashCode());
         }
         return taskStrategy;
     }

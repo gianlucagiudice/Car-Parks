@@ -4,22 +4,24 @@ import auto.Car;
 import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 import parking.manager.ParkingManager;
+import parking.manager.PrintInfo;
 import parking.valet.TaskStrategy;
 import parking.valet.Valet;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Parking {
+	private String id;
     private ParkingSpot[] parkingSpots;
     private List<Thread> valets;
     private int freeValets;
     private ParkingManager parkingManager;
 
-    public Parking(int parkingSpotsNumber, int valetsNumber) {
-        // Factory all parking spots
+    public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
+        // Initialize parking id
+    	this.id = id;
+    	// Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
@@ -29,16 +31,15 @@ public class Parking {
     }
 
     public int delivery(Car car) throws FullParkingException, InterruptedException {
-        // Wait an available valet
-        //System.out.print("[" + getCurrentTime() + "]" + " Request for delivery car: " +  car.toString() + "\n\t");
+        // Wait for an available valet
         waitForValets();
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
-        //System.out.println("\t" + "Ticked acquired with ID: " + ticketId);
-        // Occupy a valet in order to accomplish operation
+        PrintInfo.getInstance().ticketCreated(ticketId);
+        // Occupy a valet in order to accomplish an operation
         occupyValet();
-        //System.out.println("\t" + "Valet start serving . . .");
-        // Valet accomplishes the task . . .
+        PrintInfo.getInstance().startDelivery();
+        // Valet accomplishes the task...
         return ticketId;
     }
 
@@ -51,25 +52,26 @@ public class Parking {
             return null;
         } else {
             // Start pickup process
-            // TODO: SPostare sopra pickup
+            // TODO: Spostare sopra pickup
             occupyValet();
-            Car carParked = null;
-            while (carParked == null) {
+            PrintInfo.getInstance().startPickup();
+            Car parkedCar = null;
+            while (parkedCar == null) {
                 //wait();
                 // TODO: Spostare sopra
-                carParked = parkingManager.pickup(ticketId);
+                parkedCar = parkingManager.pickup(ticketId);
             }
             parkingManager.pickupCompleted(ticketId);
             releaseValet();
-            return carParked;
+            return parkedCar;
         }
-
     }
 
     private List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
             Thread valet = new Thread(new Valet(this));
+            valet.setName("Valet-" + id + "." + (i + 1));
             this.valets.add(valet);
             valet.start();
         }
@@ -78,11 +80,10 @@ public class Parking {
 
     private synchronized void waitForValets() throws InterruptedException {
         while (freeValets <= 0) {
-            //System.out.println("No valets available, waiting. . .");
+            PrintInfo.getInstance().noFreeValets();
             wait();
         }
-        //System.out.println( freeValets + " free valets, serving");
-
+        PrintInfo.getInstance().freeValets(freeValets);
     }
 
     private synchronized void occupyValet() {
@@ -106,20 +107,20 @@ public class Parking {
     }
 
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
-
         TaskStrategy t = this.parkingManager.accomplishTask();
         while (t == null){
             wait();
             t = this.parkingManager.accomplishTask();
 
         }
-
-
         return t;
-        //return parkingManager.accomplishTask();
     }
-
-    private String getCurrentTime(){
-        return new SimpleDateFormat("HH:mm:ss:SSS").format(new Date());
+    
+    @Override
+    public String toString() {
+        return "Parking {" +
+                "id=" + id + ", " +
+                "parkingSpotsNumber=" + parkingSpots.length +
+                '}';
     }
 }

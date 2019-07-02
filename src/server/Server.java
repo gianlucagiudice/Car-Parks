@@ -5,25 +5,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Server {
+public class Server extends Thread {
+	private Socket socket = null;
 
-    public static class ServerThread extends Thread {
-        private Socket socket = null;
+    public Server(Socket socket) {
+    	super("Server");
+    	this.socket = socket;
+    }
 
-        public ServerThread(Socket socket) {
-            super("ServerThread");
-            this.socket = socket;
-        }
-
-        public void run() {
-            try {
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                socket.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public void run() {
+    	try {
+    		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+    		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    		
+    		out.close();
+    		in.close();
+    		socket.close();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
 }

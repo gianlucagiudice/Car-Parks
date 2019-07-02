@@ -3,6 +3,7 @@ package auto;
 import parking.Parking;
 import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
+import parking.manager.PrintInfo;
 
 public class Driver implements Runnable {
     private Parking targetParking;
@@ -20,12 +21,19 @@ public class Driver implements Runnable {
     @Override
     public void run() {
         // Parking the car
+    	PrintInfo.getInstance().currentTime();
+    	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car);
         delivery();
+        PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
         // Sleep before pickup
         sleepToPickup();
         // Pickup car
         // TODO: Pickup
-        //pickup();
+        /* PrintInfo.getInstance().currentTime();
+    	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), ticketId);
+        // pickup();
+        // PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
+         */
     }
 
     private void delivery() {
@@ -53,6 +61,5 @@ public class Driver implements Runnable {
         }
         this.ticketId = null;
     }
-
 }
 
