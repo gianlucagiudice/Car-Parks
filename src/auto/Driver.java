@@ -1,6 +1,6 @@
 package auto;
 
-import parking.manager.Parking;
+import parking.Parking;
 import parking.exceptions.FullParkingException;
 import util.Logger;
 

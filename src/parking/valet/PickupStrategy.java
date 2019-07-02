@@ -1,7 +1,7 @@
 package parking.valet;
 
 import auto.Car;
-import parking.manager.ParkingSpot;
+import parking.ParkingSpot;
 
 import java.util.HashMap;
 

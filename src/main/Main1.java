@@ -2,7 +2,7 @@ package main;
 
 import auto.Car;
 import auto.Driver;
-import parking.manager.Parking;
+import parking.Parking;
 
 /**
  * 

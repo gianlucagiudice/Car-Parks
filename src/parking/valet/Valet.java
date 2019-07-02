@@ -1,6 +1,6 @@
 package parking.valet;
 
-import parking.manager.Parking;
+import parking.Parking;
 import util.Logger;
 
 /**
