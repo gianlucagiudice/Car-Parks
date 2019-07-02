@@ -28,27 +28,43 @@ public class Parking {
         this.freeValets = valetsNumber;
         this.valets = factoryValets(valetsNumber);
     }
-
-    public int delivery(Car car) throws FullParkingException, InterruptedException {
+    
+    public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait for an available valet
-        waitForValets();
+        while (freeValets <= 0) {
+        	PrintInfo.getInstance().noFreeValets();
+            wait();
+        }
+        PrintInfo.getInstance().freeValets(freeValets);
+        this.freeValets--;
+        
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
-        PrintInfo.getInstance().ticketCreated(ticketId);
-        // Occupy a valet in order to accomplish an operation
-        occupyValet();
+		PrintInfo.getInstance().ticketCreated(ticketId);
+		
+        // Occupy a valet in order to accomplish a task (delivery)
+        notifyAll();
         PrintInfo.getInstance().startDelivery();
-        // Valet accomplishes the task...
+        // The valet accomplishes the task (delivery)...
         return ticketId;
     }
 
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
-        waitForValets();
+        // Wait for an available valet
+    	while (freeValets <= 0) {
+        	PrintInfo.getInstance().noFreeValets();
+            wait();
+        }
+        PrintInfo.getInstance().freeValets(freeValets);
+        this.freeValets--;
+
         // Prepare to pickup
         parkingManager.prepareToPickup(ticketId);
+        
         // Start pickup process
-        occupyValet();
-        PrintInfo.getInstance().startPickup();
+        notifyAll();
+		PrintInfo.getInstance().startPickup();
+
         Car parkedCar;
         do {
             parkedCar = parkingManager.pickup(ticketId);
@@ -69,21 +85,6 @@ public class Parking {
             valet.start();
         }
         return valets;
-    }
-
-    private synchronized void waitForValets() throws InterruptedException {
-        // TODO: Devo notificare che non c'è più un valet libero
-        while (freeValets <= 0) {
-            PrintInfo.getInstance().noFreeValets();
-            wait();
-        }
-        PrintInfo.getInstance().freeValets(freeValets);
-        this.freeValets--;
-    }
-
-    private synchronized void occupyValet() {
-        // Notify all valet for a new task to accomplish
-        notifyAll();
     }
 
     public synchronized void releaseValet() {

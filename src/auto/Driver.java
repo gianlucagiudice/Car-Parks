@@ -16,13 +16,18 @@ public class Driver implements Runnable {
         this.ticketId = null;
         this.timeBeforePickup = timeBeforePickup;
     }
+    
+    public Car getCar() {
+		return car;
+	}
 
-    @Override
+	@Override
     public void run() {
         // Parking the car
     	PrintInfo.getInstance().currentTime();
     	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car);
         delivery();
+        PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
         PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
         
         // Sleep before pickup
@@ -33,6 +38,7 @@ public class Driver implements Runnable {
     	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), ticketId);
         pickup();
         PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
+		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
     }
 
     private void delivery() {

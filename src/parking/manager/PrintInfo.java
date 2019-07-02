@@ -32,8 +32,8 @@ public class PrintInfo {
 		System.out.println("New car created: " + car.toString());
 	}
 	
-	public void newDriver() {
-		System.out.println("New driver created.");
+	public void newDriver(Driver driver) {
+		System.out.println("New driver created: " + driver.getCar().toString());
 	}
 	
 	public void newThread(Thread thread) {
@@ -45,7 +45,7 @@ public class PrintInfo {
 	}
 	
 	public void deliveryRequest(Thread driver, Car car) {
-		System.out.println(driver.getName() + " requests to deliver his car: " + car.toString());
+		System.out.println(driver.getName() + " requests to deliver his " + car.toString());
 	}
 	
 	public void pickupRequest(Thread driver, int ticketId) {
@@ -69,7 +69,11 @@ public class PrintInfo {
 	}
 	
 	public void carPickedUp(Thread driver, Car car) {
-		System.out.println(driver.getName() + " picked up his car: " + car.toString());
+		System.out.println(driver.getName() + " picked up his " + car.toString());
+	}
+	
+	public void driverCar(Thread driver, Car car) {
+		System.out.println(driver.getName() + "'s " + car.toString());
 	}
 	
 	public void startDelivery() {

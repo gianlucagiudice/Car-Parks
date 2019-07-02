@@ -21,7 +21,7 @@ public class ParkingManager {
         parkingTicketManager = new ParkingTicketManager();
         // Initialize the empty queue of deliveries
         deliveries = new LinkedList<>();
-        // Initialize the gives back hashmap
+        // Initialize the gives back hash-map
         pickups = new HashMap<>();
     }
 
@@ -36,31 +36,28 @@ public class ParkingManager {
         return ticket;
     }
 
-    public synchronized Car pickup(Integer ticketId){
+    public Car pickup(Integer ticketId){
         return pickups.get(ticketId);
     }
 
     public TaskStrategy accomplishTask() throws InterruptedException {
-        TaskStrategy taskStrategy = null;
-
+        TaskStrategy taskStrategy;
         // Nothing to do
         if (deliveries.size() == 0 && pickups.size() == 0)
-            return null;
-
-        if (deliveries.size() >= pickups.size()) {
+            taskStrategy = null;
+        else if (deliveries.size() >= pickups.size()) {
             // Do a delivery
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getParkedCarSpot(), ticket.getParkedCar());
         } else {
             // Do a pickup
             Ticket ticket = getFirstPickup();
-            //ParkingSpot parkingSpotTarget = ticket.getCarParkedSpot()
             taskStrategy = new PickupStrategy(ticket.getParkedCarSpot(), pickups, ticket.hashCode());
         }
         return taskStrategy;
     }
 
-    private synchronized Ticket getFirstPickup() {
+    private Ticket getFirstPickup() {
         int ticketId = pickups.keySet().iterator().next();
         return parkingTicketManager.getTicketFromId(ticketId);
     }
@@ -70,8 +67,9 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(ticketId);
     }
 
-    public synchronized void prepareToPickup(Integer ticketId){
+    public void prepareToPickup(Integer ticketId){
         pickups.put(ticketId, null);
+        //notifyAll();
     }
 
     public void pickupCompleted(int ticketId) {
