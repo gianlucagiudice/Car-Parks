@@ -1,7 +1,6 @@
 package parking.manager;
 
 import auto.Car;
-import parking.ParkingSpot;
 import parking.exceptions.FullParkingException;
 import parking.valet.DeliveryStrategy;
 import parking.valet.PickupStrategy;
@@ -12,29 +11,27 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * 
  * @author Gianluca Giudice
  * @author Andrea Tassi
- *
  */
-public class ParkingManager {
+class ParkingManager {
     private ParkingTicketManager parkingTicketManager;
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
     private HashMap<Integer, Car> givesBack;
 
-    public ParkingManager() {
+    ParkingManager() {
         // Initialize the parkingTicketmanager
         parkingTicketManager = new ParkingTicketManager();
         // Initialize the empty queue of deliveries
         deliveries = new LinkedList<>();
         // Initialize the empty queue of pickups
         pickups = new LinkedList<>();
-        // Initialize the gives back hashmap
+        // Initialize the gives back hash map
         givesBack = new HashMap<>();
     }
 
-    public int delivery(Car car, ParkingSpot[] parkingSpots) throws FullParkingException {
+    int delivery(Car car, ParkingSpot[] parkingSpots) throws FullParkingException {
         ParkingSpot targetSpot;
         int ticket;
         // Acquire a free parking spot
@@ -45,11 +42,11 @@ public class ParkingManager {
         return ticket;
     }
 
-    public synchronized Car pickup(Integer ticketId) {
+    synchronized Car pickup(Integer ticketId) {
         return givesBack.get(ticketId);
     }
 
-    public synchronized TaskStrategy accomplishTask(){
+    synchronized TaskStrategy accomplishTask(){
         TaskStrategy taskStrategy;
         if (deliveries.size() == 0 && pickups.size() == 0) {
             // Nothing to do
@@ -75,16 +72,16 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(pickups.remove());
     }
 
-    public void prepareParking(Integer ticketId) {
+    void prepareParking(Integer ticketId) {
         pickups.add(ticketId);
     }
 
-    public synchronized void pickupCompleted(int ticketId) {
+    synchronized void pickupCompleted(int ticketId) {
         givesBack.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }
 
-    public boolean containsTicket(int ticketId) {
+    boolean containsTicket(int ticketId) {
         return parkingTicketManager.containsTicket(ticketId);
     }
 }

@@ -1,6 +1,6 @@
 package parking.valet;
 
-import parking.Parking;
+import parking.manager.Parking;
 import util.Logger;
 
 /**
@@ -27,7 +27,10 @@ public class Valet extends Logger implements Runnable {
     private void accomplishTask() {
         try {
             this.taskToAccomplish = parking.accomplishTask();
-
+            if (taskToAccomplish == null) {
+                // Parking closed
+                return;
+            }
             if (taskToAccomplish instanceof DeliveryStrategy)
                 setOperation(Operation.delivering);
             else
@@ -45,7 +48,7 @@ public class Valet extends Logger implements Runnable {
     public String toString() {
         return "Valet{" +
                 "parkingID= " + parking.getId() +
-                "parking=" + parking +
+                ", parking=" + parking +
                 "} ";
     }
 }

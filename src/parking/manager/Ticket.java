@@ -1,7 +1,6 @@
 package parking.manager;
 
 import auto.Car;
-import parking.ParkingSpot;
 
 import java.util.Objects;
 

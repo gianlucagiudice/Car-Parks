@@ -1,7 +1,7 @@
 package parking.valet;
 
 import main.Main;
-import parking.ParkingSpot;
+import parking.manager.ParkingSpot;
 
 /**
  * 
