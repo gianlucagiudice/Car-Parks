@@ -2,6 +2,12 @@ package parking;
 
 import auto.Car;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class ParkingSpot {
     private boolean isFree;
     private Car car;

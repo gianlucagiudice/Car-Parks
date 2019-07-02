@@ -5,6 +5,12 @@ import parking.ParkingSpot;
 
 import java.util.Objects;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class Ticket {
     private ParkingSpot carParkedSpot;
     private Car parkedCar;

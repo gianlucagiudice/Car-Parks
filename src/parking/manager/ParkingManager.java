@@ -11,6 +11,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class ParkingManager {
     private ParkingTicketManager parkingTicketManager;
     private Queue<Integer> deliveries;

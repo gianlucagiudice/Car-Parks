@@ -5,6 +5,12 @@ import parking.ParkingSpot;
 
 import java.util.HashMap;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class PickupStrategy extends TaskStrategy {
 
     private HashMap<Integer, Car> givesBack;

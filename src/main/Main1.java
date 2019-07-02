@@ -4,6 +4,12 @@ import auto.Car;
 import auto.Driver;
 import parking.Parking;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class Main1 {
 
     public static void main(String[] args) {

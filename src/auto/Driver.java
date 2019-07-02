@@ -4,6 +4,12 @@ import parking.Parking;
 import parking.exceptions.FullParkingException;
 import util.Logger;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class Driver extends Logger implements Runnable {
     private Parking targetParking;
     private Car car;

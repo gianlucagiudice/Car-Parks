@@ -7,6 +7,12 @@ import parking.exceptions.FullParkingException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 class ParkingTicketManager {
     private Map<Integer, Ticket> ticketMap = new HashMap<>();
 

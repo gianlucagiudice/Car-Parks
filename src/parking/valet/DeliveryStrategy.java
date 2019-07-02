@@ -3,7 +3,12 @@ package parking.valet;
 import auto.Car;
 import parking.ParkingSpot;
 
-
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class DeliveryStrategy extends TaskStrategy {
     private Car targetCar;
 

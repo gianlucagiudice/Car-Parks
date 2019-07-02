@@ -3,6 +3,12 @@ package parking.valet;
 import parking.Parking;
 import util.Logger;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public class Valet extends Logger implements Runnable {
     private Parking parking;
     private TaskStrategy taskToAccomplish;

@@ -3,6 +3,12 @@ package util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public abstract class Logger {
     private Operation currentState;
 

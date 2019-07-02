@@ -3,6 +3,12 @@ package parking.valet;
 import main.Main;
 import parking.ParkingSpot;
 
+/**
+ * 
+ * @author Gianluca Giudice
+ * @author Andrea Tassi
+ *
+ */
 public abstract class TaskStrategy {
     ParkingSpot targetParkingSpot;
 
