@@ -1,7 +1,6 @@
 package parking.manager;
 
 import auto.Car;
-import parking.ParkingSpot;
 import parking.exceptions.FullParkingException;
 import parking.valet.DeliveryStrategy;
 import parking.valet.PickupStrategy;

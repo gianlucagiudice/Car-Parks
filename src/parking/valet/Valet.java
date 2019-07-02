@@ -1,6 +1,6 @@
 package parking.valet;
 
-import parking.Parking;
+import parking.manager.Parking;
 import util.Logger;
 
 public class Valet extends Logger implements Runnable {

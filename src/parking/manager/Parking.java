@@ -1,8 +1,7 @@
-package parking;
+package parking.manager;
 
 import auto.Car;
 import parking.exceptions.FullParkingException;
-import parking.manager.ParkingManager;
 import parking.valet.TaskStrategy;
 import parking.valet.Valet;
 
