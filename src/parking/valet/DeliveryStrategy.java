@@ -15,9 +15,9 @@ public class DeliveryStrategy extends TaskStrategy {
 
     @Override
     void accomplish() throws InterruptedException {
-        PrintInfo.getInstance().startDelivery(Thread.currentThread(), targetCar, targetParkingSpot);
+        PrintInfo.startDelivery(Thread.currentThread(), targetCar, targetParkingSpot);
     	sleep();
         targetParkingSpot.occupy(targetCar);
-        PrintInfo.getInstance().deliveryCompleted(Thread.currentThread(), targetCar, targetParkingSpot);
+        PrintInfo.deliveryCompleted(Thread.currentThread(), targetCar, targetParkingSpot);
     }
 }

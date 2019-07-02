@@ -36,15 +36,15 @@ public class Parking {
 	public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait for an available valet
         while (freeValets <= 0) {
-        	PrintInfo.getInstance().noFreeValets();
+        	PrintInfo.noFreeValets();
             wait();
         }
-        PrintInfo.getInstance().freeValets(freeValets);
+        PrintInfo.freeValets(freeValets);
         this.freeValets--;
         
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
-		PrintInfo.getInstance().ticketCreated(ticketId);
+		PrintInfo.ticketCreated(ticketId);
 		
         // Occupy a valet in order to accomplish a task (delivery)
         notifyAll();
@@ -55,10 +55,10 @@ public class Parking {
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
         // Wait for an available valet
     	while (freeValets <= 0) {
-        	PrintInfo.getInstance().noFreeValets();
+        	PrintInfo.noFreeValets();
             wait();
         }
-        PrintInfo.getInstance().freeValets(freeValets);
+        PrintInfo.freeValets(freeValets);
         this.freeValets--;
 
         // Prepare to pickup
@@ -67,7 +67,7 @@ public class Parking {
         // Start pickup process
         notifyAll();
 
-        PrintInfo.getInstance().waitingForCar(Thread.currentThread());
+        PrintInfo.waitingForCar(Thread.currentThread());
         Car parkedCar;
         do {
             parkedCar = parkingManager.pickup(ticketId);

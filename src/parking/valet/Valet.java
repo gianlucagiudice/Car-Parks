@@ -21,11 +21,9 @@ public class Valet implements Runnable {
         try {
             parking.accomplishTask().accomplish();
             parking.releaseValet();
-            PrintInfo.getInstance().valetReleased(Thread.currentThread());
+            PrintInfo.valetReleased(Thread.currentThread());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-
 }

@@ -24,22 +24,23 @@ public class Driver implements Runnable {
 	@Override
     public void run() {
         // Parking the car
-		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
-		PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car, targetParking);
+		PrintInfo.driverState(Thread.currentThread(), this);
+		PrintInfo.currentTime();
+    	PrintInfo.deliveryRequest(Thread.currentThread(), car, targetParking);
         delivery();
-        PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
-        PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
+        PrintInfo.driverState(Thread.currentThread(), this);
+        PrintInfo.ticketAcquired(Thread.currentThread(), ticketId);
         
         // Sleep before pickup
         sleepBeforePickup();
         
         // Pickup car
-        PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), targetParking, ticketId);
+        PrintInfo.currentTime();
+    	PrintInfo.pickupRequest(Thread.currentThread(), targetParking, ticketId);
         pickup();
-        PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
-		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
+        PrintInfo.carPickedUp(Thread.currentThread(), car);
+		PrintInfo.driverState(Thread.currentThread(), this);
+		PrintInfo.terminatedThread(Thread.currentThread());
     }
 
     private void delivery() {

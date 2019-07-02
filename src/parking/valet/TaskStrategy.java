@@ -22,6 +22,5 @@ public abstract class TaskStrategy {
 
     private void sleep(int time) throws InterruptedException {
         Thread.sleep(time);
-
     }
 }

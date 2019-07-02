@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Random;
+
 import auto.Car;
 import auto.Driver;
 import parking.Parking;
@@ -9,25 +11,57 @@ public class Main1 {
 
     public static void main(String[] args) {
         Thread.currentThread().setName("Main1");
-        PrintInfo.getInstance().newThread(Thread.currentThread());
-        PrintInfo.getInstance().startThread(Thread.currentThread());
+        PrintInfo.newThread(Thread.currentThread());
+        PrintInfo.startThread(Thread.currentThread());
+        PrintInfo.threadState(Thread.currentThread());
         
-    	Parking p1 = new Parking(1, 10, 2);
-        PrintInfo.getInstance().newParking(p1);
+        // Variables to modify in order to carry out different tests
+        int parkingsNumber = 3; // Total number of parkings
+        int driversNumber = 10; // Total number of drivers
         
-        Car c1 = new Car("AB123CD");
-        PrintInfo.getInstance().newCar(c1);
+        Parking[] parkings = new Parking[parkingsNumber];
+        for(int i = 0; i < parkings.length; i++) {
+        	parkings[i] = new Parking(i + 1, 10, 2);
+        	PrintInfo.newParking(parkings[i]);
+        }
         
-        Driver d1 = new Driver(p1, c1, 1);
-        PrintInfo.getInstance().newDriver(d1);
-
-        Thread t1 = new Thread(d1);
-        t1.setName("Driver-1");
-        PrintInfo.getInstance().newThread(t1);
+        Car[] cars = new Car[driversNumber];
+        Driver[] drivers = new Driver[driversNumber];
+        Thread[] driverThreads = new Thread[driversNumber];
+        for(int i = 0; i < drivers.length; i++) {
+        	cars[i] = new Car("AA000" + (char) ('A' + i / 26) + (char) ('A' + i % 26));
+        	PrintInfo.newCar(cars[i]);
+        	
+        	int p = (int) (Math.random() * parkingsNumber);
+        	drivers[i] = new Driver(parkings[p], cars[i], 1);
+            PrintInfo.newDriver(drivers[i]);
+            
+            driverThreads[i] = new Thread(drivers[i]);
+            driverThreads[i].setName("Driver-" + (i + 1));
+            PrintInfo.newThread(driverThreads[i]);
+            PrintInfo.threadState(driverThreads[i]);
+            
+            driverThreads[i].start();
+            PrintInfo.startThread(driverThreads[i]);
+            PrintInfo.threadState(driverThreads[i]);
+        }
         
-        t1.start();
-        PrintInfo.getInstance().startThread(t1);
-        
-        PrintInfo.getInstance().terminatedThread(Thread.currentThread());
+        PrintInfo.terminatedThread(Thread.currentThread());
+    }
+    
+    public static String randomLicensePlate() {
+    	String licensePlate = "";
+    	for(int i = 0; i < 2; i++)
+    		licensePlate += randomLetter();
+    	for(int i = 0; i < 3; i++)
+    		licensePlate += (int) (Math.random() * 10);
+    	for(int i = 0; i < 2; i++)
+    		licensePlate += randomLetter();
+    	return licensePlate;
+    }
+    
+    public static char randomLetter() {
+    	int c = (int) (Math.random() * 26);
+    	return (char) ('A' + c);
     }
 }
