@@ -8,7 +8,7 @@ import parking.manager.PrintInfo;
 public class Main1 {
 
     public static void main(String[] args) {
-        Parking p1 = new Parking("P1", 10, 2);
+        Parking p1 = new Parking(1, 10, 2);
         PrintInfo.getInstance().newParking(p1);
         Car c1 = new Car("AB123CD");
         PrintInfo.getInstance().newCar(c1);

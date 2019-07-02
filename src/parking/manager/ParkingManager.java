@@ -2,7 +2,6 @@ package parking.manager;
 
 import auto.Car;
 import parking.ParkingSpot;
-import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 import parking.valet.DeliveryStrategy;
 import parking.valet.PickupStrategy;
@@ -37,32 +36,23 @@ public class ParkingManager {
         return ticket;
     }
 
-    public synchronized Car pickup(Integer ticketId) throws CarNotFoundException {
-        if (!parkingTicketManager.containsTicket(ticketId))
-            throw new CarNotFoundException("Car not found in the parking");
-        if (pickups.containsKey(ticketId))
-            return pickups.get(ticketId);
-        else
-            // TODO: Prepara la conegna. RequestPickup
-            return pickups.put(ticketId, null);
+    public synchronized Car pickup(Integer ticketId){
+        return pickups.get(ticketId);
     }
 
     public TaskStrategy accomplishTask() throws InterruptedException {
         TaskStrategy taskStrategy = null;
 
-
-        if (deliveries.size() == 0 && pickups.size() == 0) {
-
-            //wait();
+        // Nothing to do
+        if (deliveries.size() == 0 && pickups.size() == 0)
             return null;
-        }
-
 
         if (deliveries.size() >= pickups.size()) {
-
+            // Do a delivery
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getParkedCarSpot(), ticket.getParkedCar());
         } else {
+            // Do a pickup
             Ticket ticket = getFirstPickup();
             //ParkingSpot parkingSpotTarget = ticket.getCarParkedSpot()
             taskStrategy = new PickupStrategy(ticket.getParkedCarSpot(), pickups, ticket.hashCode());
@@ -80,7 +70,11 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(ticketId);
     }
 
-    public synchronized void pickupCompleted(int ticketId) {
+    public synchronized void prepareToPickup(Integer ticketId){
+        pickups.put(ticketId, null);
+    }
+
+    public void pickupCompleted(int ticketId) {
         pickups.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }

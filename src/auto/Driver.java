@@ -1,7 +1,6 @@
 package auto;
 
 import parking.Parking;
-import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 import parking.manager.PrintInfo;
 
@@ -25,15 +24,15 @@ public class Driver implements Runnable {
     	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car);
         delivery();
         PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
+        
         // Sleep before pickup
-        sleepToPickup();
+        sleepBeforePickup();
+        
         // Pickup car
-        // TODO: Pickup
-        /* PrintInfo.getInstance().currentTime();
+        PrintInfo.getInstance().currentTime();
     	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), ticketId);
-        // pickup();
-        // PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
-         */
+        pickup();
+        PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
     }
 
     private void delivery() {
@@ -45,7 +44,7 @@ public class Driver implements Runnable {
         this.car = null;
     }
 
-    private void sleepToPickup() {
+    private void sleepBeforePickup() {
         try {
             Thread.sleep(timeBeforePickup);
         } catch (InterruptedException e) {
@@ -55,8 +54,8 @@ public class Driver implements Runnable {
 
     private void pickup() {
         try {
-            this.car = this.targetParking.pickup(ticketId);
-        } catch (CarNotFoundException | InterruptedException e) {
+            this.car = this.targetParking.pickup(this.ticketId);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.ticketId = null;

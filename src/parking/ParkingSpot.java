@@ -30,5 +30,4 @@ public class ParkingSpot {
         this.isFree = false;
         this.car = car;
     }
-
 }

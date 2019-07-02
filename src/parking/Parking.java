@@ -1,7 +1,6 @@
 package parking;
 
 import auto.Car;
-import parking.exceptions.CarNotFoundException;
 import parking.exceptions.FullParkingException;
 import parking.manager.ParkingManager;
 import parking.manager.PrintInfo;
@@ -12,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parking {
-	private String id;
+	private int id;
     private ParkingSpot[] parkingSpots;
     private List<Thread> valets;
     private int freeValets;
     private ParkingManager parkingManager;
 
-    public Parking(String id, int parkingSpotsNumber, int valetsNumber) {
+    public Parking(int id, int parkingSpotsNumber, int valetsNumber) {
         // Initialize parking id
     	this.id = id;
     	// Factory all parking spots
@@ -43,28 +42,22 @@ public class Parking {
         return ticketId;
     }
 
-    public Car pickup(Integer ticketId) throws CarNotFoundException, InterruptedException {
-        //runValets();
-
+    public synchronized Car pickup(Integer ticketId) throws InterruptedException {
         waitForValets();
-
-        if (ticketId == null) {
-            return null;
-        } else {
-            // Start pickup process
-            // TODO: Spostare sopra pickup
-            occupyValet();
-            PrintInfo.getInstance().startPickup();
-            Car parkedCar = null;
-            while (parkedCar == null) {
-                //wait();
-                // TODO: Spostare sopra
-                parkedCar = parkingManager.pickup(ticketId);
-            }
-            parkingManager.pickupCompleted(ticketId);
-            releaseValet();
-            return parkedCar;
-        }
+        // Prepare to pickup
+        parkingManager.prepareToPickup(ticketId);
+        // Start pickup process
+        occupyValet();
+        PrintInfo.getInstance().startPickup();
+        Car parkedCar;
+        do {
+            parkedCar = parkingManager.pickup(ticketId);
+            if (parkedCar == null)
+                wait();
+        } while (parkedCar == null);
+        //releaseValet();
+        parkingManager.pickupCompleted(ticketId);
+        return parkedCar;
     }
 
     private List<Thread> factoryValets(int valetsNumber) {
@@ -79,16 +72,17 @@ public class Parking {
     }
 
     private synchronized void waitForValets() throws InterruptedException {
+        // TODO: Devo notificare che non c'è più un valet libero
         while (freeValets <= 0) {
             PrintInfo.getInstance().noFreeValets();
             wait();
         }
         PrintInfo.getInstance().freeValets(freeValets);
+        this.freeValets--;
     }
 
     private synchronized void occupyValet() {
-        this.freeValets--;
-        // Notify all valet for a new task to complete
+        // Notify all valet for a new task to accomplish
         notifyAll();
     }
 
@@ -107,15 +101,14 @@ public class Parking {
     }
 
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
-        TaskStrategy t = this.parkingManager.accomplishTask();
-        while (t == null){
+        TaskStrategy taskToAccomplish = this.parkingManager.accomplishTask();
+        while (taskToAccomplish == null) {
             wait();
-            t = this.parkingManager.accomplishTask();
-
+            taskToAccomplish = this.parkingManager.accomplishTask();
         }
-        return t;
+        return taskToAccomplish;
     }
-    
+
     @Override
     public String toString() {
         return "Parking {" +
