@@ -20,10 +20,12 @@ public class Driver implements Runnable {
     public void run() {
         // Parking the car
         delivery();
+        System.out.println(car);
         // Sleep before pickup
         sleepToPickup();
         // Pickup car
         pickup();
+        System.out.println(car);
     }
 
     private void delivery() {

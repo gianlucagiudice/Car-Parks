@@ -25,25 +25,56 @@ public class Parking {
         this.valets = factoryValets(valetsNumber);
     }
 
-    public int delivery(Car car) throws FullParkingException, InterruptedException {
+    public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait an available valet
         //System.out.print("[" + getCurrentTime() + "]" + " Request for delivery car: " +  car.toString() + "\n\t");
-        waitForValets();
+
+        //waitForValets();
+
+        while (freeValets <= 0) {
+            //System.out.println("No valets available, waiting. . .");
+            wait();
+        }
+        //System.out.println( freeValets + " free valets, serving");
+        this.freeValets--;
+
+
+
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
         //System.out.println("\t" + "Ticked acquired with ID: " + ticketId);
         // Occupy a valet in order to accomplish operation
-        occupyValet();
+
+        notifyAll();
+        //occupyValet();
+
+
         //System.out.println("\t" + "Valet start serving . . .");
         // Valet accomplishes the task . . .
         return ticketId;
     }
 
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
-        waitForValets();
+        //waitForValets();
+
+
+
+        while (freeValets <= 0) {
+            //System.out.println("No valets available, waiting. . .");
+            wait();
+        }
+        //System.out.println( freeValets + " free valets, serving");
+        this.freeValets--;
+
+
         parkingManager.prepareParking(ticketId);
         // Start pickup process
-        occupyValet();
+
+        notifyAll();
+
+        //occupyValet();
+
+
         Car carParked;
         do {
             carParked = parkingManager.pickup(ticketId);
@@ -65,6 +96,7 @@ public class Parking {
         return valets;
     }
 
+    /*
     private synchronized void waitForValets() throws InterruptedException {
         // TODO: Devo notificare che non c'è più un valet libero
         while (freeValets <= 0) {
@@ -74,6 +106,8 @@ public class Parking {
         //System.out.println( freeValets + " free valets, serving");
         this.freeValets--;
     }
+    */
+
 
     private synchronized void occupyValet() {
         // Notify all valet for a new task to accomplish
