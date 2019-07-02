@@ -52,7 +52,7 @@ public class ParkingManager {
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getCarParkedSpot(), ticket.getParkedCar());
         } else {
-            // Do a puckup
+            // Do a pickup
             Ticket ticket = getFirstPickup();
             //ParkingSpot parkingSpotTarget = ticket.getCarParkedSpot()
             taskStrategy = new PickupStrategy(ticket.getCarParkedSpot(), pickups, ticket.hashCode());
