@@ -29,7 +29,11 @@ public class Parking {
         this.valets = factoryValets(valetsNumber);
     }
     
-    public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
+    public int getId() {
+		return id;
+	}
+    
+	public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait for an available valet
         while (freeValets <= 0) {
         	PrintInfo.getInstance().noFreeValets();
@@ -44,7 +48,6 @@ public class Parking {
 		
         // Occupy a valet in order to accomplish a task (delivery)
         notifyAll();
-        PrintInfo.getInstance().startDelivery();
         // The valet accomplishes the task (delivery)...
         return ticketId;
     }
@@ -63,8 +66,8 @@ public class Parking {
         
         // Start pickup process
         notifyAll();
-		PrintInfo.getInstance().startPickup();
 
+        PrintInfo.getInstance().waitingForCar(Thread.currentThread());
         Car parkedCar;
         do {
             parkedCar = parkingManager.pickup(ticketId);
@@ -80,7 +83,7 @@ public class Parking {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
             Thread valet = new Thread(new Valet(this));
-            valet.setName("Valet-" + id + "." + (i + 1));
+            valet.setName("Valet-P" + id + "." + (i + 1));
             this.valets.add(valet);
             valet.start();
         }
@@ -96,7 +99,7 @@ public class Parking {
     private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
         parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot();
+            parkingSpots[i] = new ParkingSpot(i + 1);
         }
         return parkingSpots;
     }
@@ -113,7 +116,7 @@ public class Parking {
     @Override
     public String toString() {
         return "Parking {" +
-                "id=" + id + ", " +
+                "id=P" + id + ", " +
                 "parkingSpotsNumber=" + parkingSpots.length +
                 '}';
     }

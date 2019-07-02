@@ -2,6 +2,7 @@ package parking.valet;
 
 import auto.Car;
 import parking.ParkingSpot;
+import parking.manager.PrintInfo;
 
 
 public class DeliveryStrategy extends TaskStrategy {
@@ -14,7 +15,9 @@ public class DeliveryStrategy extends TaskStrategy {
 
     @Override
     void accomplish() throws InterruptedException {
-        sleep();
+        PrintInfo.getInstance().startDelivery(Thread.currentThread(), targetCar, targetParkingSpot);
+    	sleep();
         targetParkingSpot.occupy(targetCar);
+        PrintInfo.getInstance().deliveryCompleted(Thread.currentThread(), targetCar, targetParkingSpot);
     }
 }

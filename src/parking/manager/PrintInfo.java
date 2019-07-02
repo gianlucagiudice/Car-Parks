@@ -1,7 +1,7 @@
 package parking.manager;
 
 import auto.*;
-import parking.Parking;
+import parking.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,79 +20,103 @@ public class PrintInfo {
         return instance;
     }
 	
-	public void currentTime() {
-		System.out.println("Current time: " + new SimpleDateFormat("HH:mm:ss:SSS").format(new Date()));
-	}
-	
-	public void newParking(Parking parking) {
-		System.out.println("New parking created: " + parking.toString());
-	}
-	
-	public void newCar(Car car) {
-		System.out.println("New car created: " + car.toString());
-	}
-	
-	public void newDriver(Driver driver) {
-		System.out.println("New driver created: " + driver.getCar().toString());
-	}
-	
 	public void newThread(Thread thread) {
-		System.out.println("New thread created: " + thread.getName());
+		System.out.println("New thread created: " + thread.getName() + ".");
 	}
 	
 	public void startThread(Thread thread) {
 		System.out.println(thread.getName() + " started running.");
 	}
 	
-	public void deliveryRequest(Thread driver, Car car) {
-		System.out.println(driver.getName() + " requests to deliver his " + car.toString());
+	public void terminatedThread(Thread thread) {
+		System.out.println(thread.getName() + " terminated running.");
 	}
 	
-	public void pickupRequest(Thread driver, int ticketId) {
-		System.out.print(driver.getName() + " requests to pickup his car with the ticket id: " + ticketId);
+	public void newParking(Parking parking) {
+		System.out.println("New parking created: " + parking.toString() + ".");
+	}
+	
+	public void newCar(Car car) {
+		System.out.println("New car created: " + car.toString() + ".");
+	}
+	
+	public void newDriver(Driver driver) {
+		System.out.println("New driver created: " + driver.getCar().toString() + ".");
+	}
+	
+	public void currentTime() {
+		System.out.println("[Current time = " + new SimpleDateFormat("HH:mm:ss:SSS").format(new Date()) + "]");
+	}
+	
+	public void deliveryRequest(Thread driver, Car car, Parking parking) {
+		System.out.println(driver.getName() + " requests to deliver his " + car.toString() +
+				" to the parking P" + parking.getId() + ".");
+	}
+	
+	public void pickupRequest(Thread driver, Parking parking, int ticketId) {
+		System.out.println(driver.getName() + " requests to pickup his car from the parking P" +
+				parking.getId() + " with the ticket {id=" + ticketId + "}.");
 	}
 	
 	public void noFreeValets() {
-		System.out.print("No free valets: waiting...");
+		System.out.println("No free valets: waiting...");
 	}
 	
 	public void freeValets(int freeValets) {
-		System.out.print(freeValets + " free valets: serving drivers...");
+		System.out.println(freeValets + " free valets: serving drivers...");
 	}
 	
 	public void ticketCreated(int ticketId) {
-		System.out.println("Ticket acquired, id: " + ticketId);
+		System.out.println("New ticket created: {id=" + ticketId + "}.");
 	}
 	
 	public void ticketAcquired(Thread driver, int ticketId) {
-		System.out.println(driver.getName() + " acquired the ticket, id: " + ticketId);
+		System.out.println(driver.getName() + " acquired the ticket {id=" + ticketId + "}.");
 	}
 	
 	public void carPickedUp(Thread driver, Car car) {
-		System.out.println(driver.getName() + " picked up his " + car.toString());
+		System.out.println(driver.getName() + " picked up his " + car.toString() + ".");
 	}
 	
 	public void driverCar(Thread driver, Car car) {
-		System.out.println(driver.getName() + "'s " + car.toString());
+		System.out.println(driver.getName() + "'s car: " + car + ".");
 	}
 	
-	public void startDelivery() {
-		System.out.println("Valet starts parking the car...");
+	public void startDelivery(Thread valet, Car car, ParkingSpot parkingSpot) {
+		System.out.println(valet.getName() + " starts parking the " + car.toString() +
+				" in the parking spot: " + parkingSpot.getId() + ".");
 	}
 	
-	public void startPickup() {
-		System.out.println("Valet starts picking up the car...");
+	public void deliveryCompleted(Thread valet, Car car, ParkingSpot parkingSpot) {
+		System.out.println(valet.getName() + " successfully parked the " + car.toString() +
+				" in the parking spot: " + parkingSpot.getId() + ".");
 	}
 	
-	public void startAccomplishTask(Thread valet) {
-		System.out.println(valet.getName() + " starts to accomplish his task...");
+	public void startPickup(Thread valet, ParkingSpot parkingSpot) {
+		System.out.println(valet.getName() + " starts picking up the car from the parking spot: " +
+				parkingSpot.getId() + ".");
 	}
 	
-	public void taskAccomplished(Thread valet) {
-		System.out.println(valet.getName() + " accomplished his task.");
+	public void pickupCompleted(Thread valet, Car car, ParkingSpot parkingSpot) {
+		System.out.println(valet.getName() + " successfully picked up the " + car.toString() +
+				" from the parking spot: " + parkingSpot.getId() + ".");
+	}
+	
+	public void startGivingBack(Thread valet, Car car) {
+		System.out.println(valet.getName() + " starts giving back the " + car.toString() +
+				" to its driver.");
+	}
+	
+	public void givingBackCompleted(Thread valet, Car car) {
+		System.out.println(valet.getName() + " successfully gave back the " + car.toString() +
+				" to its driver.");
 	}
 	
 	public void valetReleased(Thread valet) {
 		System.out.println(valet.getName() + " is now free.");
+	}
+	
+	public void waitingForCar(Thread driver) {
+		System.out.println(driver.getName() + " is waiting for his car to be picked up and given back to him...");
 	}
 }

@@ -21,7 +21,7 @@ public class ParkingManager {
         parkingTicketManager = new ParkingTicketManager();
         // Initialize the empty queue of deliveries
         deliveries = new LinkedList<>();
-        // Initialize the gives back hash-map
+        // Initialize the hash-map of the cars to pickup and to give back to drivers
         pickups = new HashMap<>();
     }
 

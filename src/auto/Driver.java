@@ -24,8 +24,9 @@ public class Driver implements Runnable {
 	@Override
     public void run() {
         // Parking the car
-    	PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car);
+		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
+		PrintInfo.getInstance().currentTime();
+    	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car, targetParking);
         delivery();
         PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
         PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
@@ -35,7 +36,7 @@ public class Driver implements Runnable {
         
         // Pickup car
         PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), ticketId);
+    	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), targetParking, ticketId);
         pickup();
         PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
 		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
