@@ -30,7 +30,7 @@ public class Parking {
         // Parking is open
         this.isOpen = true;
     }
-    
+
     public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait an available valet
         waitForValets();
@@ -59,7 +59,7 @@ public class Parking {
 
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
         TaskStrategy taskToAccomplish;
-        while ((taskToAccomplish = this.parkingManager.accomplishTask()) == null)
+        while ((taskToAccomplish = this.parkingManager.accomplishTask()) == null && isOpen)
             wait();
         return taskToAccomplish;
     }
@@ -107,11 +107,12 @@ public class Parking {
                 '}';
     }
 
-    public boolean isOpen() {
+    public synchronized boolean isOpen() {
         return isOpen;
     }
 
-    public void closeParking(){
+    public synchronized void closeParking() {
         this.isOpen = false;
+        notifyAll();
     }
 }

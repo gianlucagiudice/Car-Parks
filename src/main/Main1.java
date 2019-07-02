@@ -12,7 +12,7 @@ public class Main1 {
         Parking[] parkings = factoryParkings();
         Thread[] drivers = factoryDriver(parkings);
         startDrivers(drivers);
-        closeAllParking(parkings, drivers);
+        closeAllParking(parkings);
     }
 
     private static String getRandomLicensePlate() {
@@ -55,26 +55,18 @@ public class Main1 {
     private static void startDrivers(Thread[] drivers) {
         for (Thread driver : drivers){
             driver.start();
+        }
+        for (Thread driver : drivers){
             try {
                 driver.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            ;
         }
     }
 
-    private static void closeAllParking(Parking[] parkings, Thread[] drivers) {
-        /*
-        while (boolean someoneAlive)
-        for (Thread driver : drivers) {
-            try {
-                driver.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-         */
-
+    private static void closeAllParking(Parking[] parkings) {
         for (Parking parking : parkings)
             parking.closeParking();
     }

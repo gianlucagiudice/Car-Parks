@@ -1,6 +1,7 @@
 package main;
 
 public interface Main {
+
     int parkingsNumber = 2;
     int parkingSpotNumber = 4;
     int driversNumber = 5;

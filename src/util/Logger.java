@@ -10,7 +10,7 @@ public abstract class Logger {
     private String toStringLogger() {
         String currentTime = new SimpleDateFormat("HH:mm:ss:SSS").format(new Date());
         return "[" + currentTime + "] " + this.getClass().getSimpleName() + ": " +
-                Thread.currentThread().getName() + " " + toStringOperation() + "\n\t" +
+                Thread.currentThread().getName() + " " + toStringOperation() + ".\n\t" +
                 this.toString();
     }
 
