@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ParkingManager {
+class ParkingManager {
     private ParkingTicketManager parkingTicketManager;
     private Queue<Integer> deliveries;
     private Queue<Integer> pickups;
     private HashMap<Integer, Car> givesBack;
 
-    public ParkingManager() {
+    ParkingManager() {
         // Initialize the parkingTicketmanager
         parkingTicketManager = new ParkingTicketManager();
         // Initialize the empty queue of deliveries
@@ -27,7 +27,7 @@ public class ParkingManager {
         givesBack = new HashMap<>();
     }
 
-    public int delivery(Car car, ParkingSpot[] parkingSpots) throws FullParkingException {
+    int delivery(Car car, ParkingSpot[] parkingSpots) throws FullParkingException {
         ParkingSpot targetSpot;
         int ticket;
         // Acquire a free parking spot
@@ -38,11 +38,11 @@ public class ParkingManager {
         return ticket;
     }
 
-    public synchronized Car pickup(Integer ticketId) {
+    synchronized Car pickup(Integer ticketId) {
         return givesBack.get(ticketId);
     }
 
-    public synchronized TaskStrategy accomplishTask(){
+    synchronized TaskStrategy accomplishTask(){
         TaskStrategy taskStrategy;
         if (deliveries.size() == 0 && pickups.size() == 0) {
             // Nothing to do
@@ -68,16 +68,16 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(pickups.remove());
     }
 
-    public void prepareParking(Integer ticketId) {
+    void prepareParking(Integer ticketId) {
         pickups.add(ticketId);
     }
 
-    public synchronized void pickupCompleted(int ticketId) {
+    synchronized void pickupCompleted(int ticketId) {
         givesBack.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }
 
-    public boolean containsTicket(int ticketId) {
+    boolean containsTicket(int ticketId) {
         return parkingTicketManager.containsTicket(ticketId);
     }
 }
