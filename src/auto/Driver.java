@@ -61,7 +61,8 @@ public class Driver extends Logger implements Runnable {
     @Override
     public String toString() {
         return "Driver{" +
-                "car=" + car +
+                "targetParking=" + targetParking.getId() +
+                ", car=" + car +
                 ", ticketId=" + ticketId +
                 "} ";
     }

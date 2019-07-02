@@ -77,4 +77,8 @@ public class ParkingManager {
         givesBack.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }
+
+    public boolean containsTicket(int ticketId) {
+        return parkingTicketManager.containsTicket(ticketId);
+    }
 }

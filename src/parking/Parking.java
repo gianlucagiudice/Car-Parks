@@ -11,12 +11,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Parking {
+    private int id;
     private ParkingSpot[] parkingSpots;
     private List<Thread> valets;
     private int freeValets;
     private ParkingManager parkingManager;
+    private boolean isOpen;
 
-    public Parking(int parkingSpotsNumber, int valetsNumber) {
+    public Parking(int id, int parkingSpotsNumber, int valetsNumber) {
+        this.id = id;
         // Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Create a new parking manager
@@ -24,6 +27,8 @@ public class Parking {
         // Factory all valets
         this.freeValets = valetsNumber;
         this.valets = factoryValets(valetsNumber);
+        // Parking is open
+        this.isOpen = true;
     }
     
     public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
@@ -37,6 +42,8 @@ public class Parking {
     }
 
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
+        // Can't pickup if not delivered yet
+        while (!parkingManager.containsTicket(ticketId)) wait();
         // Wait an available valet
         waitForValets();
         // Prepare pickup operation
@@ -89,10 +96,22 @@ public class Parking {
         return valets;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Parking{" +
                 "parkingSpots=" + Arrays.toString(parkingSpots) +
                 '}';
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void closeParking(){
+        this.isOpen = false;
     }
 }
