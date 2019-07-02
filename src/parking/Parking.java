@@ -3,24 +3,21 @@ package parking;
 import auto.Car;
 import parking.exceptions.FullParkingException;
 import parking.manager.ParkingManager;
-import parking.manager.PrintInfo;
 import parking.valet.TaskStrategy;
 import parking.valet.Valet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Parking {
-	private int id;
     private ParkingSpot[] parkingSpots;
     private List<Thread> valets;
     private int freeValets;
     private ParkingManager parkingManager;
 
-    public Parking(int id, int parkingSpotsNumber, int valetsNumber) {
-        // Initialize parking id
-    	this.id = id;
-    	// Factory all parking spots
+    public Parking(int parkingSpotsNumber, int valetsNumber) {
+        // Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Create a new parking manager
         this.parkingManager = new ParkingManager();
@@ -28,96 +25,74 @@ public class Parking {
         this.freeValets = valetsNumber;
         this.valets = factoryValets(valetsNumber);
     }
-    
-    public int getId() {
-		return id;
-	}
-    
-	public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
-        // Wait for an available valet
-        while (freeValets <= 0) {
-        	PrintInfo.getInstance().noFreeValets();
-            wait();
-        }
-        PrintInfo.getInstance().freeValets(freeValets);
-        this.freeValets--;
-        
+
+    public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
+        // Wait an available valet
+        waitForValets();
         // Generate a ticket
         int ticketId = parkingManager.delivery(car, this.parkingSpots);
-		PrintInfo.getInstance().ticketCreated(ticketId);
-		
-        // Occupy a valet in order to accomplish a task (delivery)
+        // Notify all valet for a new task
         notifyAll();
-        // The valet accomplishes the task (delivery)...
         return ticketId;
     }
 
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
-        // Wait for an available valet
-    	while (freeValets <= 0) {
-        	PrintInfo.getInstance().noFreeValets();
-            wait();
-        }
-        PrintInfo.getInstance().freeValets(freeValets);
-        this.freeValets--;
-
-        // Prepare to pickup
-        parkingManager.prepareToPickup(ticketId);
-        
+        // Wait an available valet
+        waitForValets();
+        // Prepare pickup operation
+        parkingManager.prepareParking(ticketId);
         // Start pickup process
         notifyAll();
-
-        PrintInfo.getInstance().waitingForCar(Thread.currentThread());
-        Car parkedCar;
-        do {
-            parkedCar = parkingManager.pickup(ticketId);
-            if (parkedCar == null)
-                wait();
-        } while (parkedCar == null);
-        //releaseValet();
+        Car carParked;
+        while ((carParked = parkingManager.pickup(ticketId)) == null)
+            wait();
         parkingManager.pickupCompleted(ticketId);
-        return parkedCar;
+        return carParked;
     }
 
-    private List<Thread> factoryValets(int valetsNumber) {
-        valets = new ArrayList<>();
-        for (int i = 0; i < valetsNumber; i++) {
-            Thread valet = new Thread(new Valet(this));
-            valet.setName("Valet-P" + id + "." + (i + 1));
-            this.valets.add(valet);
-            valet.start();
+    public synchronized TaskStrategy accomplishTask() throws InterruptedException {
+        TaskStrategy taskToAccomplish;
+        while ((taskToAccomplish = this.parkingManager.accomplishTask()) == null)
+            wait();
+        return taskToAccomplish;
+    }
+
+    private synchronized void waitForValets() throws InterruptedException {
+        while (freeValets <= 0) {
+            wait();
         }
-        return valets;
+        this.freeValets--;
     }
 
     public synchronized void releaseValet() {
+        // A valet is now free
         this.freeValets++;
-        // Notify all waiting drivers for a new delivery/pickup valet
+        // Notify all waiting drivers for a free valet
         notifyAll();
     }
 
     private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
         parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot(i + 1);
+            parkingSpots[i] = new ParkingSpot();
         }
         return parkingSpots;
     }
 
-    public synchronized TaskStrategy accomplishTask() throws InterruptedException {
-        TaskStrategy taskToAccomplish = this.parkingManager.accomplishTask();
-        while (taskToAccomplish == null) {
-            wait();
-            taskToAccomplish = this.parkingManager.accomplishTask();
+    private synchronized List<Thread> factoryValets(int valetsNumber) {
+        valets = new ArrayList<>();
+        for (int i = 0; i < valetsNumber; i++) {
+            Thread valet = new Thread(new Valet(this));
+            this.valets.add(valet);
+            valet.start();
         }
-        return taskToAccomplish;
+        return valets;
     }
 
     @Override
     public String toString() {
-        return "Parking {" +
-                "id=P" + id + ", " +
-                "parkingSpotsNumber=" + parkingSpots.length +
+        return "Parking{" +
+                "parkingSpots=" + Arrays.toString(parkingSpots) +
                 '}';
     }
 }

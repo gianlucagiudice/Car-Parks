@@ -9,14 +9,6 @@ public class Car {
         this.licensePlate = licensePlate;
     }
 
-    public String getLicensePlate() {
-        return licensePlate;
-    }
-
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(licensePlate);
@@ -24,8 +16,8 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car {" +
-                "licensePlate=\"" + licensePlate + '\"' +
+        return "Car{" +
+                "licensePlate='" + licensePlate + '\'' +
                 '}';
     }
 }

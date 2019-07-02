@@ -14,15 +14,18 @@ import java.util.Queue;
 public class ParkingManager {
     private ParkingTicketManager parkingTicketManager;
     private Queue<Integer> deliveries;
-    private HashMap<Integer, Car> pickups;
+    private Queue<Integer> pickups;
+    private HashMap<Integer, Car> givesBack;
 
     public ParkingManager() {
         // Initialize the parkingTicketmanager
         parkingTicketManager = new ParkingTicketManager();
         // Initialize the empty queue of deliveries
         deliveries = new LinkedList<>();
-        // Initialize the hash-map of the cars to pickup and to give back to drivers
-        pickups = new HashMap<>();
+        // Initialize the empty queue of pickups
+        pickups = new LinkedList<>();
+        // Initialize the gives back hashmap
+        givesBack = new HashMap<>();
     }
 
     public int delivery(Car car, ParkingSpot[] parkingSpots) throws FullParkingException {
@@ -36,30 +39,25 @@ public class ParkingManager {
         return ticket;
     }
 
-    public Car pickup(Integer ticketId){
-        return pickups.get(ticketId);
+    public synchronized Car pickup(Integer ticketId) {
+        return givesBack.get(ticketId);
     }
 
-    public TaskStrategy accomplishTask() throws InterruptedException {
+    public synchronized TaskStrategy accomplishTask(){
         TaskStrategy taskStrategy;
-        // Nothing to do
-        if (deliveries.size() == 0 && pickups.size() == 0)
+        if (deliveries.size() == 0 && pickups.size() == 0) {
+            // Nothing to do
             taskStrategy = null;
-        else if (deliveries.size() >= pickups.size()) {
+        } else if (deliveries.size() >= pickups.size()) {
             // Do a delivery
             Ticket ticket = getFirstDelivery();
             taskStrategy = new DeliveryStrategy(ticket.getParkedCarSpot(), ticket.getParkedCar());
         } else {
             // Do a pickup
             Ticket ticket = getFirstPickup();
-            taskStrategy = new PickupStrategy(ticket.getParkedCarSpot(), pickups, ticket.hashCode());
+            taskStrategy = new PickupStrategy(ticket.getParkedCarSpot(), givesBack, ticket.hashCode());
         }
         return taskStrategy;
-    }
-
-    private Ticket getFirstPickup() {
-        int ticketId = pickups.keySet().iterator().next();
-        return parkingTicketManager.getTicketFromId(ticketId);
     }
 
     private Ticket getFirstDelivery() {
@@ -67,15 +65,17 @@ public class ParkingManager {
         return parkingTicketManager.getTicketFromId(ticketId);
     }
 
-    public void prepareToPickup(Integer ticketId){
-        pickups.put(ticketId, null);
-        //notifyAll();
+    private synchronized Ticket getFirstPickup() {
+        return parkingTicketManager.getTicketFromId(pickups.remove());
     }
 
-    public void pickupCompleted(int ticketId) {
-        pickups.remove(ticketId);
+    public void prepareParking(Integer ticketId) {
+        pickups.add(ticketId);
+    }
+
+    public synchronized void pickupCompleted(int ticketId) {
+        givesBack.remove(ticketId);
         parkingTicketManager.destroyTicket(ticketId);
     }
-
 
 }

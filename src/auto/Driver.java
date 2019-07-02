@@ -2,9 +2,9 @@ package auto;
 
 import parking.Parking;
 import parking.exceptions.FullParkingException;
-import parking.manager.PrintInfo;
+import util.Logger;
 
-public class Driver implements Runnable {
+public class Driver extends Logger implements Runnable {
     private Parking targetParking;
     private Car car;
     private Integer ticketId;
@@ -16,30 +16,20 @@ public class Driver implements Runnable {
         this.ticketId = null;
         this.timeBeforePickup = timeBeforePickup;
     }
-    
-    public Car getCar() {
-		return car;
-	}
 
-	@Override
+    @Override
     public void run() {
         // Parking the car
-		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
-		PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().deliveryRequest(Thread.currentThread(), car, targetParking);
+        setOperation(Operation.delivering);
         delivery();
-        PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
-        PrintInfo.getInstance().ticketAcquired(Thread.currentThread(), ticketId);
-        
+        setOperation(Operation.delivered);
         // Sleep before pickup
-        sleepBeforePickup();
-        
+        setOperation(Operation.sleeping);
+        sleepToPickup();
         // Pickup car
-        PrintInfo.getInstance().currentTime();
-    	PrintInfo.getInstance().pickupRequest(Thread.currentThread(), targetParking, ticketId);
+        setOperation(Operation.pickingUp);
         pickup();
-        PrintInfo.getInstance().carPickedUp(Thread.currentThread(), car);
-		PrintInfo.getInstance().driverCar(Thread.currentThread(), car);
+        setOperation(Operation.pickedUp);
     }
 
     private void delivery() {
@@ -51,7 +41,7 @@ public class Driver implements Runnable {
         this.car = null;
     }
 
-    private void sleepBeforePickup() {
+    private void sleepToPickup() {
         try {
             Thread.sleep(timeBeforePickup);
         } catch (InterruptedException e) {
@@ -67,5 +57,14 @@ public class Driver implements Runnable {
         }
         this.ticketId = null;
     }
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "car=" + car +
+                ", ticketId=" + ticketId +
+                "} ";
+    }
+
 }
 

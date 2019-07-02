@@ -3,21 +3,15 @@ package parking;
 import auto.Car;
 
 public class ParkingSpot {
-    private int id;
-	private boolean isFree;
+    private boolean isFree;
     private Car car;
 
-    ParkingSpot(int id) {
-        this.id = id;
-    	this.isFree = true;
+    ParkingSpot() {
+        this.isFree = true;
         this.car = null;
     }
-    
-    public int getId() {
-		return id;
-	}
 
-	public boolean isFree() {
+    public boolean isFree() {
         return isFree;
     }
 
@@ -39,10 +33,9 @@ public class ParkingSpot {
 
     @Override
     public String toString() {
-        return "ParkingSpot {" +
-                "id=" + id + ", " +
-                "isFree=" + isFree + ", " +
-                car.toString() +
+        return "ParkingSpot{" +
+                "isFree=" + isFree +
+                ", car=" + car +
                 '}';
     }
 }

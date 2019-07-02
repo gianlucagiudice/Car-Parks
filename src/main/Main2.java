@@ -1,6 +1,6 @@
 package main;
 
-import server.Server;
+import server.Server.ServerThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,7 +19,7 @@ public class Main2 {
         }
         while (listening)
             try {
-                new Server(serverSocket.accept()).start();
+                new ServerThread(serverSocket.accept()).start();
             } catch (IOException e) {
                 System.err.println("Accept failed.");
                 System.exit(-1);
