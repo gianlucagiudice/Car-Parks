@@ -16,6 +16,12 @@ public class Driver extends Logger implements Runnable {
     private Integer ticketId;
     private int timeBeforePickup;
 
+    /**
+     * Public constructor.
+     * @param targetParking The parking where the driver wants to delivery his car.
+     * @param car The driver's car.
+     * @param timeBeforePickup The time to sleep before picking up the car.
+     */
     public Driver(Parking targetParking, Car car, int timeBeforePickup) {
         this.targetParking = targetParking;
         this.car = car;
@@ -38,6 +44,9 @@ public class Driver extends Logger implements Runnable {
         setOperation(Operation.pickedUp);
     }
 
+    /**
+     * Deliveries the driver's car to the target parking.
+     */
     private void delivery() {
         try {
             this.ticketId = this.targetParking.delivery(this.car);
@@ -47,6 +56,9 @@ public class Driver extends Logger implements Runnable {
         this.car = null;
     }
 
+    /**
+     * Sleeps before picking up the car.
+     */
     private void sleepToPickup() {
         try {
             Thread.sleep(timeBeforePickup);
@@ -55,6 +67,9 @@ public class Driver extends Logger implements Runnable {
         }
     }
 
+    /**
+     * Picks up the car.
+     */
     private void pickup() {
         try {
             this.car = this.targetParking.pickup(this.ticketId);
@@ -67,7 +82,8 @@ public class Driver extends Logger implements Runnable {
     @Override
     public String toString() {
         return "Driver{" +
-                "car=" + car +
+                "targetParking=" + targetParking.getId() +
+                ", car=" + car +
                 ", ticketId=" + ticketId +
                 "} ";
     }

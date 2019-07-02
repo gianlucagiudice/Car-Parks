@@ -17,12 +17,21 @@ import java.util.List;
  *
  */
 public class Parking {
+    private int id;
     private ParkingSpot[] parkingSpots;
     private List<Thread> valets;
     private int freeValets;
     private ParkingManager parkingManager;
+    private boolean isOpen;
 
-    public Parking(int parkingSpotsNumber, int valetsNumber) {
+    /**
+     * Public constructor.
+     * @param id The parking id.
+     * @param parkingSpotsNumber
+     * @param valetsNumber
+     */
+    public Parking(int id, int parkingSpotsNumber, int valetsNumber) {
+        this.id = id;
         // Factory all parking spots
         this.parkingSpots = factoryParkingSpots(parkingSpotsNumber);
         // Create a new parking manager
@@ -30,8 +39,17 @@ public class Parking {
         // Factory all valets
         this.freeValets = valetsNumber;
         this.valets = factoryValets(valetsNumber);
+        // Parking is open
+        this.isOpen = true;
     }
     
+    /**
+     * Deliveries the car.
+     * @param car
+     * @return The ticket id.
+     * @throws FullParkingException
+     * @throws InterruptedException
+     */
     public synchronized int delivery(Car car) throws FullParkingException, InterruptedException {
         // Wait an available valet
         waitForValets();
@@ -42,7 +60,15 @@ public class Parking {
         return ticketId;
     }
 
+    /**
+     * Picks up the car.
+     * @param ticketId
+     * @return The parked car.
+     * @throws InterruptedException
+     */
     public synchronized Car pickup(Integer ticketId) throws InterruptedException {
+        // Can't pickup if not delivered yet
+        while (!parkingManager.containsTicket(ticketId)) wait();
         // Wait an available valet
         waitForValets();
         // Prepare pickup operation
@@ -56,6 +82,11 @@ public class Parking {
         return carParked;
     }
 
+    /**
+     * 
+     * @return The task to accomplish.
+     * @throws InterruptedException
+     */
     public synchronized TaskStrategy accomplishTask() throws InterruptedException {
         TaskStrategy taskToAccomplish;
         while ((taskToAccomplish = this.parkingManager.accomplishTask()) == null)
@@ -63,6 +94,10 @@ public class Parking {
         return taskToAccomplish;
     }
 
+    /**
+     * 
+     * @throws InterruptedException
+     */
     private synchronized void waitForValets() throws InterruptedException {
         while (freeValets <= 0) {
             wait();
@@ -70,6 +105,9 @@ public class Parking {
         this.freeValets--;
     }
 
+    /**
+     * Releases the valets.
+     */
     public synchronized void releaseValet() {
         // A valet is now free
         this.freeValets++;
@@ -77,6 +115,11 @@ public class Parking {
         notifyAll();
     }
 
+    /**
+     * 
+     * @param parkingSpotsNumber
+     * @return
+     */
     private ParkingSpot[] factoryParkingSpots(int parkingSpotsNumber) {
         parkingSpots = new ParkingSpot[parkingSpotsNumber];
         for (int i = 0; i < parkingSpots.length; i++) {
@@ -85,6 +128,11 @@ public class Parking {
         return parkingSpots;
     }
 
+    /**
+     * 
+     * @param valetsNumber
+     * @return
+     */
     private synchronized List<Thread> factoryValets(int valetsNumber) {
         valets = new ArrayList<>();
         for (int i = 0; i < valetsNumber; i++) {
@@ -95,10 +143,33 @@ public class Parking {
         return valets;
     }
 
+    /**
+     * Getter for the parking id.
+     * @return The parking id.
+     */
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Parking{" +
                 "parkingSpots=" + Arrays.toString(parkingSpots) +
                 '}';
+    }
+
+    /**
+     * Getter for the attribute isOpen.
+     * @return The value of the attribute isOpen.
+     */
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    /**
+     * Closes the parking.
+     */
+    public void closeParking(){
+        this.isOpen = false;
     }
 }

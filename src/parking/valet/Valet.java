@@ -19,7 +19,7 @@ public class Valet extends Logger implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (parking.isOpen()) {
             accomplishTask();
         }
     }
@@ -34,8 +34,6 @@ public class Valet extends Logger implements Runnable {
                 setOperation(Operation.pickingUp);
 
             taskToAccomplish.accomplish();
-
-            setOperation(Operation.waiting);
             parking.releaseValet();
             this.taskToAccomplish = null;
         } catch (InterruptedException e) {
@@ -46,6 +44,7 @@ public class Valet extends Logger implements Runnable {
     @Override
     public String toString() {
         return "Valet{" +
+                "parkingID= " + parking.getId() +
                 "parking=" + parking +
                 "} ";
     }

@@ -15,15 +15,28 @@ public class Ticket {
     private ParkingSpot carParkedSpot;
     private Car parkedCar;
 
+    /**
+     * Constructor.
+     * @param carParkedSpot
+     * @param parkedCar
+     */
     Ticket(ParkingSpot carParkedSpot, Car parkedCar) {
         this.carParkedSpot = carParkedSpot;
         this.parkedCar = parkedCar;
     }
 
+    /**
+     * Getter for the parking spot.
+     * @return The parking spot where the car is parked.
+     */
     ParkingSpot getParkedCarSpot() {
         return carParkedSpot;
     }
 
+    /**
+     * Getter for the parked car.
+     * @return The parked car.
+     */
     Car getParkedCar() {
         return parkedCar;
     }
